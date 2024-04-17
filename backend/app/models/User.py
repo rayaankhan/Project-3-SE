@@ -1,15 +1,47 @@
-from app import db
+class User:
+    def __init__(self, id, username, email, age, password):
+        self.__id = id
+        self.__username = username
+        self.__email = email
+        self.__age = age
+        self.__password = password
 
-class User(db.Model):
-    __tablename__ = 'users'
+    # getters
+    def get_id(self):
+        return self.__id
+    
+    def get_username(self):
+        return self.__username
+    
+    def get_email(self):
+        return self.__email
 
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(100), unique=True, nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    def get_age(self):
+        return self.__age
+    
+    def get_password(self):
+        return self.__password
+    
+    # setters
+    def set_username(self, username):
+        self.__username = username
+
+    def set_email(self, email):
+        self.__email = email
+
+    def set_age(self, age):
+        self.__age = age
+
+    def set_password(self, password):
+        self.__password = password
 
     def serialize(self):
         return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email
+            'id': self.__id,
+            'username': self.__username,
+            'email': self.__email,
+            'age': self.__age
         }
+    
+
+    
