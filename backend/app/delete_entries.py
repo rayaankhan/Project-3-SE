@@ -15,4 +15,12 @@ def delete_user(user_id):
     conn.close()
     return user_id
 
-delete_user('efcb22e7-4171-418c-9057-943ebbc7a498')
+def delete_table():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DROP TABLE manager_casinos")
+    conn.commit()
+    conn.close()
+
+# delete_user('efcb22e7-4171-418c-9057-943ebbc7a498')
+delete_table()

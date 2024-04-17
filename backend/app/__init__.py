@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
 import mysql.connector
@@ -22,6 +21,10 @@ def create_tables():
     cursor = conn.cursor()
     # create your tables here
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id varchar(255) PRIMARY KEY, username varchar(255), email varchar(255), age int, password varchar(255))")
+    # manager_salary table, id references to the user id and salary
+    cursor.execute("CREATE TABLE IF NOT EXISTS manager_salary (id varchar(255) PRIMARY KEY, salary int, FOREIGN KEY(id) REFERENCES users(id))")
+    # casinos table
+
     conn.commit()
     conn.close()
 
@@ -54,3 +57,4 @@ if __name__ == '__main__':
 # import app.models.User
 # db.create_all()
 from app.resources.UserResource import *
+from app.resources.ManagerResource import *

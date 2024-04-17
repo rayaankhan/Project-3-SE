@@ -1,9 +1,11 @@
 import React from "react";
+import Navbar from "../components/Navbar";
 
 function ManagerHome() {
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Manager's Hello world!</h1>
+      <Navbar />
+      <h1 className="text-3xl font-bold underline">Manager's Home!</h1>
     </div>
   );
 }

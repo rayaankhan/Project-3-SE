@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import UserHome from './pages/UserHome';
 import ManagerHome from './pages/ManagerHome';
-import LoginRegister from './pages/LoginRegister';
+import AdminHome from './pages/AdminHome';
+import {LoginRegister} from './pages/LoginRegister';
 // import PrivateRoute from './components/PrivateRoute';
 import UserAnalytics from './pages/UserAnalytics';
 import ManagerAnalytics from './pages/ManagerAnalytics';
@@ -21,7 +22,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginRegister />} />
-        <Route path="/home" element={userRole === 'user' ? <UserHome />:<ManagerHome />}/>
+        <Route path="/home" element={userRole === 'admin' ? <AdminHome /> : userRole === 'manager' ? <ManagerHome /> : <UserHome />} />
         <Route path="/analytics" element={userRole === 'user' ? <UserAnalytics />:<ManagerAnalytics />}/>
       </Routes>
     </BrowserRouter>
