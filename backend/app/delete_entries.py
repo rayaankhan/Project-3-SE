@@ -1,9 +1,9 @@
 # from config import DB_PATH
 import sqlite3
-
+from config import DB_PATH
 # Function to get a database connection
 def get_db_connection():
-    conn = sqlite3.connect("/home/yatharth-gupta/Desktop/sem6/SE/project-3/Project-3-SE/backend/SE-Project-3.db")
+    conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
