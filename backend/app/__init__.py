@@ -1,12 +1,15 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
 import mysql.connector
 # from config import DB_CONFIG
 from config import DB_PATH
 import sqlite3
-#  use routes
+import mysql.connector
+# from config import DB_CONFIG
+from config import DB_PATH
+import sqlite3
+import uuid
 
 app = Flask(__name__)
 CORS(app)
@@ -23,16 +26,24 @@ def create_tables():
     # create your tables here
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id varchar(255) PRIMARY KEY, username varchar(255), email varchar(255), age int, password varchar(255))")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS casino (id varchar(255) PRIMARY KEY, tableid varchar(255), barid varchar(255), tokencounterid varchar(255), staffid varchar(255), managerid varchar(255))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS casino_token_mg (id varchar(255) PRIMARY KEY, tokencounterid varchar(255), managerid varchar(255), FOREIGN KEY (tokencounterid) REFERENCES tokencounter(id), FOREIGN KEY (managerid) REFERENCES users(id))")
+    conn.commit()
+    cursor.execute("CREATE TABLE IF NOT EXISTS casino_gametable (id varchar(255), gametableid varchar(255) PRIMARY KEY, FOREIGN KEY (id) REFERENCES casino_token_mg(id), FOREIGN KEY (gametableid) REFERENCES gametable(id))")
+    conn.commit()
+    cursor.execute("CREATE TABLE IF NOT EXISTS casino_bar (id varchar(255), barid varchar(255) PRIMARY KEY, FOREIGN KEY (id) REFERENCES casino_token_mg(id), FOREIGN KEY (barid) REFERENCES bar(id))")
     conn.commit()
     cursor.execute("CREATE TABLE IF NOT EXISTS gametable (id varchar(255) PRIMARY KEY, staffid varchar(255), prob int, type varchar(255))")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS bar (id varchar(255) PRIMARY KEY, staffid varchar(255))")
+    cursor.execute("CREATE TABLE IF NOT EXISTS bar (id varchar(255) PRIMARY KEY, staffid varchar(255), drinks int)")
+    conn.commit()
+    cursor.execute("CREATE TABLE IF NOT EXISTS tokencounter (id varchar(255) PRIMARY KEY)")
+    conn.commit()
+    cursor.execute("CREATE TABLE IF NOT EXISTS staff (id varchar(255) PRIMARY KEY, salary int, currentAssignedId varchar(255));")
     conn.commit()
     conn.close()
 
 create_tables()
-
+# addStaff()
 
 
 if __name__ == '__main__':
@@ -60,3 +71,5 @@ if __name__ == '__main__':
 # import app.models.User
 # db.create_all()
 from app.resources.UserResource import *
+from app.resources.ManagerResource import *
+from app.resources.CasinoResource import *

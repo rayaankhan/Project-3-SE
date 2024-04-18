@@ -61,12 +61,13 @@ function LoginForm() {
         console.log('User logged in successfully!');
         // set currentTab in local storage or state management
         localStorage.setItem("currentTab", "home");
-        // navigate to the home page
-        navigate("/home");
         // save the user id in local storage
         const userData = await response.json();
         console.log('User data:', userData);
         localStorage.setItem("userId", userData.id);
+        localStorage.setItem("userRole", userData.role);
+        // navigate to the home page
+        navigate("/home");
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -105,19 +106,17 @@ function RegisterForm() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [contactNumber, setContactNumber] = useState("");
   const [age, setAge] = useState("");
   const navigate = useNavigate();
 
   const handleRegister = async (event) => {
     event.preventDefault();
-    console.log("Registering with:", username, email, contactNumber, age);
+    console.log("Registering with:", username, email, age);
     // Create a user object with form data
     const user = {
       username,
       email,
       password,
-      contactNumber,
       age,
     };
 
@@ -172,13 +171,6 @@ function RegisterForm() {
           className="w-full p-3 border border-gray-300 rounded-md"
         />
         <input
-          type="text"
-          placeholder="Contact Number"
-          value={contactNumber}
-          onChange={(e) => setContactNumber(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-md"
-        />
-        <input
           type="number"
           placeholder="Age"
           value={age}
@@ -196,4 +188,5 @@ function RegisterForm() {
   );
 }
 
-export default LoginRegister;
+// export default LoginRegister;
+export {RegisterForm, LoginForm, LoginRegister}

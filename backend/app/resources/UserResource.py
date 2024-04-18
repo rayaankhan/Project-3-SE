@@ -1,9 +1,12 @@
 from flask import jsonify
 from app import app
 from app.dao.UserDao import UserDao
+from app.dao.ManagerDao import ManagerDao
 from flask import request
 
+
 user_dao = UserDao()
+manager_dao = ManagerDao()
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = user_dao.get_user_by_id(user_id)
@@ -13,6 +16,7 @@ def get_user(user_id):
 
 @app.route('/users/add', methods=['POST'])
 def add_user():
+    # print("i am here")
     username = request.json['username']
     email = request.json['email']
     age = request.json['age']
@@ -25,6 +29,38 @@ def login():
     username = request.json['username']
     password = request.json['password']
     user = user_dao.get_user_by_username(username)
+    response = None
     if user and user.get_password() == password:
-        return jsonify(user.serialize())
-    return jsonify({'error': 'Invalid credentials'}), 401
+        manager = manager_dao.get_manager_by_id(user.get_id())
+        response = user.serialize()
+        if(user.get_username() == 'admin'):
+            # add a variable role to the user object
+            response['role'] = 'admin'
+            response = jsonify(response)
+        elif manager:
+            # add a variable role to the user object
+            response['role'] = 'manager'
+            response = jsonify(response)
+        else:
+            # add a variable role to the user object
+            response['role'] = 'user'
+            response = jsonify(response)
+    else:
+        response = jsonify({'error': 'Invalid credentials'}), 401
+    return response
+
+@app.route('/avail_staff', methods=['POST'])
+def get_avail_staff():
+    print("here")
+    staff_list = user_dao.get_all_avail_staff()
+    staff_list_json = [row["id"] for row in staff_list]
+    # print("avail_staff_list: ", staff_list_json)
+    return {"avail_staff": staff_list_json}
+
+@app.route('/add_staff', methods=['POST'])
+def add_staff():
+    name = request.json['Name']
+    salary = request.json['Salary']
+    staff_id = user_dao.add_staff(salary)
+    print(staff_id)
+    return jsonify({'id': staff_id})

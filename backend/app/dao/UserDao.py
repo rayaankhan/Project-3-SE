@@ -3,6 +3,24 @@ from app.models.User import User
 import uuid
 
 class UserDao:
+
+    def get_staff_list(self, number):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM staff WHERE currentAssignedId = '-1' ORDER BY currentAssignedId LIMIT ?", (number,))
+        staff_list = cursor.fetchall()
+        conn.close()
+        return staff_list
+    
+    def get_all_avail_staff(self):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM staff WHERE currentAssignedId = '-1'")
+        staff_list = cursor.fetchall()
+        conn.close()
+        # print("staff_list: ", staff_list)
+        return staff_list
+    
     def get_user_by_id(self, user_id):
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -26,7 +44,7 @@ class UserDao:
         return None
     
     def create_user(self, username, email, age, password):
-        id = str(uuid.uuid4())
+        id = "user_" + str(uuid.uuid4())
         # create a User Object
         user = User(id, username, email, age, password)
         conn = get_db_connection()
@@ -53,4 +71,12 @@ class UserDao:
         conn.commit()
         conn.close()
         return user_id
-
+    
+    def add_staff(self, salary):
+        id = "staff_" + str(uuid.uuid4())
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO staff (id, salary, currentAssignedId) VALUES (?, ?, ?)", (id, salary, "-1"))
+        conn.commit()
+        conn.close()
+        return id

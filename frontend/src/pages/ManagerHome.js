@@ -1,9 +1,17 @@
 import React from "react";
+import Navbar from "../components/Navbar";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 function ManagerHome() {
+  const [currentTab, setCurrentTab] = useState("home");
+  const navigate = useNavigate();
+
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">Manager's Hello world!</h1>
+      <Navbar />
+      <h1 className="text-3xl font-bold underline">Manager's Home!</h1>
     </div>
   );
 }

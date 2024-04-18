@@ -1,5 +1,5 @@
 class TokenCounter:
-    def __init__(self, id, staffid, prob, type):
+    def __init__(self, id):
         self.__id = id
 
     # getters

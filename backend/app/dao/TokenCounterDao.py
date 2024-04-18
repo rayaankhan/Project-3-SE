@@ -5,11 +5,11 @@ import uuid
 class TokenCounterDao:
 
     def create_tokencounter(self):
-        id = str(uuid.uuid4())
-        TokenCounter = TokenCounter(id)
+        id = "tokencounter_" + str(uuid.uuid4())
+        tokenCounter = TokenCounter(id)
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO tokencounter (id) VALUES (?, ?, ?, ?, ?)", (tokenCounter.get_id()))
+        cursor.execute("INSERT INTO tokencounter (id) VALUES (?)", (tokenCounter.get_id(),))
         conn.commit()
         conn.close()
-        return user.get_id()
+        return tokenCounter.get_id()

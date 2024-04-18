@@ -17,7 +17,7 @@ class ConcreteCasinoBuilder(CasinoBuilder):
         self.TableD = []
         self.Bar = []
         self.StaffId = []
-        self.TokenCounter = None
+        self.TokenCounterId = None
         self.TokenCounterDao = TokenCounterDao()
         self.GameTableDao = GameTableDao()
         self.BarDao = BarDao()
@@ -26,38 +26,62 @@ class ConcreteCasinoBuilder(CasinoBuilder):
     def constructGameTableA(self,number,staffid):
 
         for i in range(number):
-            self.TableA.append(self.GameTableDao.create_gametable(staffid[i], 0.3, "dice"))
-            self.StaffId.append(staffid[i])
+            if(i >= len(staffid)):
+                tableId = self.GameTableDao.create_gametable("-1", 0.3, "dice", "A")
+            else:
+                tableId = self.GameTableDao.create_gametable(staffid[i], 0.3, "dice", "A")
+                self.StaffId.append(staffid[i])
+            self.TableA.append(tableId)
 
     def constructGameTableB(self,number,staffid):
         for i in range(number):
-            self.TableB.append(self.GameTableDao.create_gametable(staffid[i], 0.7, "card"))
-            self.StaffId.append(staffid[i])
+            if(i >= len(staffid)):
+                tableId = self.GameTableDao.create_gametable("-1", 0.7, "card", "B")
+            else:
+                tableId = self.GameTableDao.create_gametable(staffid[i], 0.7, "card", "B")
+                self.StaffId.append(staffid[i])
+            self.TableB.append(tableId)
 
     def constructGameTableC(self,number,staffid):
         for i in range(number):
-            self.TableC.append(self.GameTableDao.create_gametable(staffid[i], 0.5, "card"))
-            self.StaffId.append(staffid[i])
+            if(i >= len(staffid)):
+                tableId = self.GameTableDao.create_gametable("-1", 0.5, "card", "C")
+            else:
+                tableId = self.GameTableDao.create_gametable(staffid[i], 0.5, "card", "C")
+                self.StaffId.append(staffid[i])
+            self.TableC.append(tableId)
 
     def constructGameTableD(self,number,staffid):
         for i in range(number):
-            self.TableD.append(self.GameTableDao.create_gametable(staffid[i], 0.5, "dice"))
-            self.StaffId.append(staffid[i])
+            if(i >= len(staffid)):
+                tableId = self.GameTableDao.create_gametable("-1", 0.5, "dice", "D")
+            else:
+                tableId = self.GameTableDao.create_gametable(staffid[i], 0.5, "dice", "D")
+                self.StaffId.append(staffid[i])
+            self.TableD.append(tableId)
 
     def constructBar(self, number,staffid):
-        for _ in range(number):
-            self.Bar.append(self.BarDao.create_bar(staffid, 5))
+        for i in range(number):
+            if(i >= len(staffid)):
+                barId = self.BarDao.create_bar("-1", 5)
+            else:
+                barId = self.BarDao.create_bar(staffid[i], 5)
+                self.StaffId.append(staffid[i])
+            self.Bar.append(barId)
 
     def constructTokenCounter(self):
-        self.TokenCounter = self.TokenCounterDao.create_tokencounter()
+        self.TokenCounterId = self.TokenCounterDao.create_tokencounter()
         
-    def getResult(self):
+    def getResult(self, managerId, casinoType):
         TablesList = self.TableA + self.TableB + self.TableC + self.TableD
-        id = str(uuid.uuid4())
-        for i in range(TablesList):
-            for j in range(self.StaffId):
-                for k in range(self.Bar):
-                    self.CasinoDao.create_casino(i,j,k,self.TokenCounter, managerid)
+        casino_id = "casino" + casinoType + "_" + str(uuid.uuid4())
+        self.CasinoDao.add_casinoTokenMg(casino_id, self.TokenCounterId, managerId)
+        for gameTableid in TablesList:
+            self.CasinoDao.add_casinogametable(casino_id, gameTableid)
+        for barId in self.Bar:
+            self.CasinoDao.add_casinobar(casino_id, barId)
+
+        return casino_id
 
 
 
