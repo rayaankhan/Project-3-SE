@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "../components/Navbar";
+import Navbar from "../../components/Navbar";
 
 function UserHome() {
   return (
     <div>
         <Navbar />
-      <h1 className="text-3xl font-bold underline">Manager's Analytics!</h1>
+      <h1 className="text-3xl font-bold underline">User's Analytics!</h1>
     </div>
   );
 }

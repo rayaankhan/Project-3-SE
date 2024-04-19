@@ -1,6 +1,7 @@
 # from config import DB_PATH
 import sqlite3
 import uuid
+import random
 
 # Function to get a database connection
 def get_db_connection():
@@ -61,14 +62,51 @@ def delete_table():
 # conn.commit()
 # conn.close()
 
-def addStaff():
+def addStaff(no):
     conn = get_db_connection()
     cursor = conn.cursor()
     # create your tables here
-    for _ in range(20):
+    for _ in range(no):
         id = "staff_" + str(uuid.uuid4())
-        cursor.execute(f"INSERT INTO staff (id, salary, currentAssignedId) VALUES ('{id}', 1000, '-1')")
+        name = "Staff-" + str(random.randint(0,100000))
+        cursor.execute(f"INSERT INTO staff (staffid, name, salary, currentAssignedId) VALUES ('{id}', '{name}', 1000, '-1')")
         conn.commit()
     conn.close()
 
-addStaff()
+# addStaff()
+
+
+tables = [
+    "casino_token_mg",
+    "casino_gametable",
+    "casino_bar",
+    "txn_user_casino",
+    "gametable",
+    "bar",
+    "txn_tokencounter",
+    "\"transaction\"",
+    "casino_analytics"
+    "user_token_wallet",
+    "user_subscription",
+]
+
+def drop_table(tables):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    # Delete each table
+    for table in tables:
+        cursor.execute(f"DROP TABLE IF EXISTS {table}")
+
+    # Commit changes and close connection
+    # cursor.execute("DELETE FROM staff")
+    conn.commit()
+    conn.close()
+
+# drop_table(tables)
+# addStaff(2000)
+conn = get_db_connection()
+cursor = conn.cursor()
+cursor.execute(f"DELETE FROM casino_analytics")
+cursor.execute("DELETE FROM user_subscription")
+conn.commit()
+conn.close()

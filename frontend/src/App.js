@@ -1,20 +1,23 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import UserHome from './pages/UserHome';
-import ManagerHome from './pages/ManagerHome';
+import UserHome from './pages/User/UserHome';
+import ManagerHome from './pages/Manager/ManagerHome';
 import AdminHome from './pages/AdminHome';
 import {LoginRegister} from './pages/LoginRegister';
 // import PrivateRoute from './components/PrivateRoute';
-import UserAnalytics from './pages/UserAnalytics';
-import ManagerAnalytics from './pages/ManagerAnalytics';
-import CreateCasino from './pages/createCasino/CreateCasino';
-import CasinoTypeRouter from './pages/createCasino/CasinoTypeRouter';
-import UserCasino from './pages/UserCasino';
-import ManagerCasino from './pages/ManagerCasino';
-import CasinoInfo from './pages/CasinoInfo';
-import GameTableInfo from './pages/GameTableInfo';
-import BarInfo from './pages/BarInfo';
+import UserAnalytics from './pages/User/UserAnalytics';
+import ManagerAnalytics from './pages/Manager/ManagerAnalytics';
+import CreateCasino from './pages/Manager/createCasino/CreateCasino';
+import CasinoTypeRouter from './pages/Manager/createCasino/CasinoTypeRouter';
+import UserCasino from './pages/User/UserCasino';
+import ManagerCasino from './pages/Manager/ManagerCasino';
+import CasinoInfo from './pages/Manager/CasinoInfo';
+import GameTableInfo from './pages/Manager/GameTableInfo';
+import BarInfo from './pages/Manager/BarInfo';
+import UserCasinoInfo from './pages/User/UserCasinoInfo';
+import GameTablePlay from './pages/User/GameTablePlay';
+import BarOrder from './pages/User/BarOrder';
 
 function App() {
   const [userRole, setUserRole] = useState(null);
@@ -37,6 +40,10 @@ function App() {
         <Route path="/casinos/:casinoId" element={<CasinoInfo />} />
         <Route path="/gametable/:gametableId" element={<GameTableInfo />} />
         <Route path="/bar/:barId" element={<BarInfo />} />
+        <Route path="/user/:casinoId" element={<UserCasinoInfo />} />
+        <Route path="/play/gametable/:gametableId" element={<GameTablePlay />} />
+        <Route path="/order/bar/:barId" element={<BarOrder />} />
+        
       </Routes>
     </BrowserRouter>
   );

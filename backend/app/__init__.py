@@ -26,20 +26,43 @@ def create_tables():
     # create your tables here
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id varchar(255) PRIMARY KEY, username varchar(255), email varchar(255), age int, password varchar(255))")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS casino_token_mg (id varchar(255) PRIMARY KEY, tokencounterid varchar(255), managerid varchar(255), FOREIGN KEY (tokencounterid) REFERENCES tokencounter(id), FOREIGN KEY (managerid) REFERENCES users(id))")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS \"transaction\" (txnid varchar(255) PRIMARY KEY, paymenttype varchar(255), amount int)")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS casino_gametable (id varchar(255), gametableid varchar(255) PRIMARY KEY, FOREIGN KEY (id) REFERENCES casino_token_mg(id), FOREIGN KEY (gametableid) REFERENCES gametable(id))")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS gametable (gametableid varchar(255) PRIMARY KEY, name varchar(255), staffid varchar(255), prob int, type varchar(255), FOREIGN KEY (staffid) REFERENCES staff(id) ON DELETE CASCADE)")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS casino_bar (id varchar(255), barid varchar(255) PRIMARY KEY, FOREIGN KEY (id) REFERENCES casino_token_mg(id), FOREIGN KEY (barid) REFERENCES bar(id))")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS bar (barid varchar(255) PRIMARY KEY, name varchar(255), staffid varchar(255), drinks int)")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS gametable (id varchar(255) PRIMARY KEY, staffid varchar(255), prob int, type varchar(255))")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS staff (staffid varchar(255) PRIMARY KEY, name varchar(255), salary int, currentassignedid varchar(255), FOREIGN KEY (currentassignedid) REFERENCES gametable(gametableid) ON DELETE CASCADE, FOREIGN KEY (currentassignedid) REFERENCES bar(barid) ON DELETE CASCADE)")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS bar (id varchar(255) PRIMARY KEY, staffid varchar(255), drinks int)")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS casino_token_mg (casinoid varchar(255) PRIMARY KEY, casinoname varchar(255), tokencountername varchar(255), tokencounterid varchar(255), managerid varchar(255), FOREIGN KEY (managerid) REFERENCES users(id) ON DELETE CASCADE)")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS tokencounter (id varchar(255) PRIMARY KEY)")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS casino_gametable (casinoid varchar(255), gametableid varchar(255) PRIMARY KEY, FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE, FOREIGN KEY (gametableid) REFERENCES gametable(gametableid) ON DELETE CASCADE)")
     conn.commit()
-    cursor.execute("CREATE TABLE IF NOT EXISTS staff (id varchar(255) PRIMARY KEY, salary int, currentAssignedId varchar(255));")
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS casino_bar (casinoid varchar(255), barid varchar(255) PRIMARY KEY, FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE, FOREIGN KEY (barid) REFERENCES bar(barid) ON DELETE CASCADE)")
     conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS txn_user_casino (txnid varchar(255), userid varchar(255), casinoid varchar(255), FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (casinoId) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE, FOREIGN KEY (txnId) REFERENCES \"transaction\"(txnid) ON DELETE CASCADE)")
+    conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS txn_tokencounter (txnid varchar(255) PRIMARY KEY, tokencounterid varchar(255), FOREIGN KEY (tokencounterid) REFERENCES casino_token_mg(tokencounterid) ON DELETE CASCADE, FOREIGN KEY (txnid) REFERENCES \"transaction\"(txnid) ON DELETE CASCADE)")
+    conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS casino_analytics (casinoid varchar(255), gametableid varchar(255), datetime varchar(255), amount int, FOREIGN KEY (casinoId) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE, FOREIGN KEY (gametableId) REFERENCES casino_gametable(gametableid) ON DELETE CASCADE)")
+    conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS user_token_wallet (walletid varchar(255) PRIMARY KEY, userid varchar(255), token_balance int, FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE)")
+    conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS user_subscription (casinoid varchar(255), userid varchar(255), FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE, FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE)")
+    conn.commit()
+    
     conn.close()
 
 create_tables()

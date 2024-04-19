@@ -9,7 +9,7 @@ class TokenCounterDao:
         tokenCounter = TokenCounter(id)
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO tokencounter (id) VALUES (?)", (tokenCounter.get_id(),))
+        cursor.execute("INSERT INTO tokencounter (tokencounterid) VALUES (?)", (tokenCounter.get_id(),))
         conn.commit()
         conn.close()
         return tokenCounter.get_id()

@@ -7,7 +7,7 @@ class UserDao:
     def get_staff_list(self, number):
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT id FROM staff WHERE currentAssignedId = '-1' ORDER BY currentAssignedId LIMIT ?", (number,))
+        cursor.execute("SELECT staffid FROM staff WHERE currentassignedid = '-1' ORDER BY currentassignedid LIMIT ?", (number,))
         staff_list = cursor.fetchall()
         conn.close()
         return staff_list
@@ -15,7 +15,7 @@ class UserDao:
     def get_all_avail_staff(self):
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT id FROM staff WHERE currentAssignedId = '-1'")
+        cursor.execute("SELECT staffid, name FROM staff WHERE currentassignedid = '-1'")
         staff_list = cursor.fetchall()
         conn.close()
         # print("staff_list: ", staff_list)
@@ -54,6 +54,23 @@ class UserDao:
         conn.close()
         return user.get_id()
     
+    def create_user_token_wallet(self, userid):
+        id = "wallet_" + str(uuid.uuid4())
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO user_token_wallet (walletid, userid, token_balance) VALUES (?, ?, ?)", (id, userid, 0))
+        conn.commit()
+        conn.close()
+        return id
+    
+    def create_user_subscription(self, userid, casinoid):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO user_subscription (userid, casinoid) VALUES (?, ?)", (userid, casinoid))
+        conn.commit()
+        conn.close()
+        return userid
+    
     def update_user(self, user_id, username=None, email=None, age=None, password=None):
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -72,11 +89,45 @@ class UserDao:
         conn.close()
         return user_id
     
-    def add_staff(self, salary):
+    def add_staff(self, name, salary):
         id = "staff_" + str(uuid.uuid4())
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO staff (id, salary, currentAssignedId) VALUES (?, ?, ?)", (id, salary, "-1"))
+        cursor.execute("INSERT INTO staff (staffid, name, salary, currentAssignedId) VALUES (?, ?, ?, ?)", (id, name, salary, "-1"))
         conn.commit()
         conn.close()
         return id
+    
+    def check_user_subscription(self, userid, casinoid):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user_subscription WHERE userid=? AND casinoid=?", (userid, casinoid))
+        user_subscription = cursor.fetchone()
+        conn.close()
+        if user_subscription:
+            return True
+        return False
+    
+    def check_user_subscription_by_id(self, userid, casinoid):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user_subscription WHERE userid=? AND casinoid=?", (userid, casinoid))
+        user_subscription = cursor.fetchone()
+        conn.close()
+        return True if user_subscription else False
+    
+    def remove_user_subscription(self, userid, casinoid):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM user_subscription WHERE userid=? AND casinoid=?", (userid, casinoid))
+        conn.commit()
+        conn.close()
+        return userid
+    
+    def get_subscribers(self, casinoid):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT userid FROM user_subscription WHERE casinoid=?", (casinoid,))
+        subscribers = cursor.fetchall()
+        conn.close()
+        return subscribers

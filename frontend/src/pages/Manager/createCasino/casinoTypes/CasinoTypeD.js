@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../../../components/Navbar";
 
 function CasinoTypeA() {
   // State variables to store input values
@@ -48,6 +48,12 @@ function CasinoTypeA() {
       // Handle error from the backend
     }
   };
+  const handleInputChange = (e, setter) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 0) {
+      setter(value);
+    }
+  };
 
   return (
     <div>
@@ -60,7 +66,7 @@ function CasinoTypeA() {
             type="number"
             id="gameTableB"
             value={gameTableB}
-            onChange={(e) => setGameTableB(e.target.value)}
+            onChange={(e) => handleInputChange(e, setGameTableB)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>
@@ -70,7 +76,7 @@ function CasinoTypeA() {
             type="number"
             id="gameTableD"
             value={gameTableD}
-            onChange={(e) => setGameTableD(e.target.value)}
+            onChange={(e) => handleInputChange(e, setGameTableD)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>

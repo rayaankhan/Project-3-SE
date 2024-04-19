@@ -1,25 +1,24 @@
 import React, { useState } from "react";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../../../components/Navbar";
 
-function CasinoTypeA() {
+function CasinoTypeB() {
   // State variables to store input values
-  const [gameTableC, setGameTableC] = useState(0);
-  const [gameTableD, setGameTableD] = useState(0);
+  const [gameTableA, setGameTableA] = useState(0);
+  const [gameTableB, setGameTableB] = useState(0);
   const [bar, setBar] = useState(0);
 
   // Function to handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault(); // Prevent default form submission behavior
     let userId = localStorage.getItem("userId")
-
     // Construct form data
     const formData = {
       userId: userId,
-      casinoType: "C",
-      gameTableA: 0,
-      gameTableB: 0,
-      gameTableC: parseInt(gameTableC), // Convert to integer
-      gameTableD: parseInt(gameTableD), // Convert to integer
+      casinoType: "B",
+      gameTableA: parseInt(gameTableA), // Convert to integer
+      gameTableB: parseInt(gameTableB), // Convert to integer
+      gameTableC: 0,
+      gameTableD: 0,
       bar: parseInt(bar)
     };
 
@@ -47,30 +46,36 @@ function CasinoTypeA() {
       console.error("Error:", error);
       // Handle error from the backend
     }
+  };    
+  const handleInputChange = (e, setter) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 0) {
+      setter(value);
+    }
   };
 
   return (
     <div>
       <Navbar />
-      <h2 className="text-2xl font-semibold mb-4">Type C Casino Customization</h2>
+      <h2 className="text-2xl font-semibold mb-4">Type A Casino Customization</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="gameTableA" className="block font-medium">Game Table C:</label>
+          <label htmlFor="gameTableA" className="block font-medium">Game Table A:</label>
           <input
             type="number"
-            id="gameTableC"
-            value={gameTableC}
-            onChange={(e) => setGameTableC(e.target.value)}
+            id="gameTableA"
+            value={gameTableA}
+            onChange={(e) => handleInputChange(e, setGameTableA)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>
         <div>
-          <label htmlFor="gameTableB" className="block font-medium">Game Table D:</label>
+          <label htmlFor="gameTableB" className="block font-medium">Game Table B:</label>
           <input
             type="number"
-            id="gameTableD"
-            value={gameTableD}
-            onChange={(e) => setGameTableD(e.target.value)}
+            id="gameTableB"
+            value={gameTableB}
+            onChange={(e) => handleInputChange(e, setGameTableB)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>
@@ -80,7 +85,7 @@ function CasinoTypeA() {
             type="number"
             id="bar"
             value={bar}
-            onChange={(e) => setBar(e.target.value)}
+            onChange={(e) => handleInputChange(e, setBar)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>
@@ -92,4 +97,4 @@ function CasinoTypeA() {
   );
 }
 
-export default CasinoTypeA;
+export default CasinoTypeB;

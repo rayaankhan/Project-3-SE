@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Navbar from "../../../components/Navbar";
+import Navbar from "../../../../components/Navbar";
 
 function CasinoTypeA() {
   // State variables to store input values
@@ -49,6 +49,13 @@ function CasinoTypeA() {
     }
   };
 
+  const handleInputChange = (e, setter) => {
+    const value = parseInt(e.target.value, 10);
+    if (!isNaN(value) && value >= 0) {
+      setter(value);
+    }
+  };
+
   return (
     <div>
       <Navbar />
@@ -64,7 +71,7 @@ function CasinoTypeA() {
             type="number"
             id="gameTableA"
             value={gameTableA}
-            onChange={(e) => setGameTableA(e.target.value)}
+            onChange={(e) => handleInputChange(e, setGameTableA)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>
@@ -76,7 +83,7 @@ function CasinoTypeA() {
             type="number"
             id="gameTableC"
             value={gameTableC}
-            onChange={(e) => setGameTableC(e.target.value)}
+            onChange={(e) => handleInputChange(e, setGameTableC)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>
@@ -88,7 +95,7 @@ function CasinoTypeA() {
             type="number"
             id="bar"
             value={bar}
-            onChange={(e) => setBar(e.target.value)}
+            onChange={(e) => handleInputChange(e, setBar)}
             className="border border-gray-300 rounded-md py-2 px-4 focus:outline-none focus:border-blue-500"
           />
         </div>
