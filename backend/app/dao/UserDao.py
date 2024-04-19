@@ -1,5 +1,7 @@
 from app import get_db_connection
+from app import get_db_connection
 from app.models.User import User
+import uuid
 import uuid
 
 class UserDao:

@@ -2,7 +2,7 @@
 
 * Frontend
   ```
-  cd frontend/cms  
+  cd frontend  
   npm i
   npm start
   ```

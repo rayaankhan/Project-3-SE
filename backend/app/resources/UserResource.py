@@ -4,8 +4,12 @@ from app.dao.UserDao import UserDao
 from app.dao.ManagerDao import ManagerDao
 from flask import request
 
+from app.dao.ManagerDao import ManagerDao
+from flask import request
+
 
 user_dao = UserDao()
+manager_dao = ManagerDao()
 manager_dao = ManagerDao()
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
