@@ -1,0 +1,25 @@
+.casino-table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  .casino-table th, .casino-table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  .casino-table th {
+    background-color: #f2f2f2;
+  }
+  
+  .casino-table ol {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+  
+  .casino-table ol li {
+    margin-bottom: 5px;
+  }
+  

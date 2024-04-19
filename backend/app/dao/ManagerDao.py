@@ -21,7 +21,7 @@ class ManagerDao:
         return None
     
     def create_manager(self, username, email, age, password, salary):
-        id = str(uuid.uuid4())
+        id = "manager_" + str(uuid.uuid4())
         # create a Manager Object
         manager = Manager(id, salary)
         conn = get_db_connection()

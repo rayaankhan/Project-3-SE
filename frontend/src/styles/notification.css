@@ -1,0 +1,36 @@
+.notification-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    max-width: 400px; /* Set a maximum width */
+    margin: 0 auto; /* Center the div horizontally */
+  }
+  
+  .notification-input {
+    padding: 10px;
+    border: 2px solid #3498db; /* Blue border */
+    border-radius: 5px;
+    font-size: 16px;
+    flex: 1;
+    margin-right: 10px;
+  }
+  
+  .notification-input::placeholder {
+    color: #95a5a6; /* Light gray placeholder */
+  }
+  
+  .notify-button {
+    background-color: #2ecc71; /* Green background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .notify-button:hover {
+    background-color: #27ae60; /* Darker green background on hover */
+  }
+  
