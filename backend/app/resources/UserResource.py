@@ -5,12 +5,14 @@ from app.dao.ManagerDao import ManagerDao
 from flask import request
 
 from app.dao.ManagerDao import ManagerDao
+from app.dao.SubscriptionDao import SubscriptionDao
+from app.dao.CasinoDao import CasinoDao
 from flask import request
 
 
 user_dao = UserDao()
 manager_dao = ManagerDao()
-manager_dao = ManagerDao()
+casino_dao = CasinoDao()
 @app.route('/users/<int:user_id>', methods=['GET'])
 def get_user(user_id):
     user = user_dao.get_user_by_id(user_id)
@@ -34,12 +36,16 @@ def subscribe():
     print("here")
     userId = request.json['userId']
     casinoId = request.json['casinoId']
-    if(user_dao.check_user_subscription(userId, casinoId) == False):
-        user_dao.create_user_subscription(userId, casinoId)
-        return jsonify({'status': 'subscribed'})
-    else:
-        user_dao.remove_user_subscription(userId, casinoId)
+    
+    casino = casino_dao.get_casino(casinoId)
+    if( casino.check_subscription(userId)):
+        casino.detach(userId)
         return jsonify({'status': 'unsubscribed'})
+    else:
+        casino.attach(userId)
+        return jsonify({'status': 'subscribed'})
+        
+            
 
 @app.route('/users/login', methods=['POST'])
 def login():
@@ -87,7 +93,9 @@ def add_staff():
 def check_subscription():
     userId = request.json['userId']
     casinoId = request.json['casinoId']
-    if(user_dao.check_user_subscription(userId, casinoId)):
+    
+    casino = casino_dao.get_casino(casinoId)
+    if( casino.check_subscription(userId)):
         return jsonify({'status': 'subscribed'})
     else:
-        return jsonify({'status': 'not_subscribed'})
+        return jsonify({'status': 'unsubscribed'})

@@ -4,13 +4,14 @@ from app import app
 from flask import request
 from app.models.builder.CasinoDirector import CasinoDirector
 from app.models.builder.CasinoBuilder import CasinoBuilder
-from app.models.builder.ConcreteCasinoBuilder import ConcreteCasinoBuilder
+from app.models.builder.ConcreteCasinoBuilder import ConcreteCasinoBuilder 
 from app.dao.UserDao import UserDao
 from app.dao.CasinoDao import CasinoDao
 from app.dao.GameTableDao import GameTableDao
 from app.dao.BarDao import BarDao
 from app.dao.StaffDao import StaffDao
 from app.models.builder.GameTable import GameTable
+from app.models.builder.Casino import Casino
 import json
 
 user_dao = UserDao()
@@ -48,10 +49,11 @@ def add_casino():
     else:
         print("Invalid casino")
         return jsonify({'id': -1})
-    casinoId = builder.getResult(managerId, casinoType)
-    if(casinoId == -1):
+    casino = builder.getResult(managerId, casinoType)
+    if(type(casino) is Casino):
+        return jsonify({'id': casino.get_casinoid(), 'status': 'Success'})
+    else:
         return jsonify({'status': 'Failed'})
-    return jsonify({'status': 'Success', 'id': casinoId})
 
 
 @app.route('/manager_casinos',methods=['POST'])
@@ -360,11 +362,8 @@ def notify():
     casinoId = request.json['casinoId']
     managerId = request.json['managerId']
     text = request.json['text']
-    
-    subscriber_list_sql = user_dao.get_subscribers(casinoId)
-    subscriber_list = [row['userid'] for row in subscriber_list_sql]
-    print("subscriber_list: ", subscriber_list)
-    
-    # Yatharth has to implement here
 
-    return jsonify({'status': 'Success'})
+    casino = casino_dao.get_casino(casinoId)
+    casino.send_notification(text)
+
+    return jsonify({'status':'Success'})

@@ -1,7 +1,5 @@
 from app import get_db_connection
-from app import get_db_connection
 from app.models.User import User
-import uuid
 import uuid
 
 class UserDao:
@@ -65,14 +63,6 @@ class UserDao:
         conn.close()
         return id
     
-    def create_user_subscription(self, userid, casinoid):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("INSERT INTO user_subscription (userid, casinoid) VALUES (?, ?)", (userid, casinoid))
-        conn.commit()
-        conn.close()
-        return userid
-    
     def update_user(self, user_id, username=None, email=None, age=None, password=None):
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -99,37 +89,3 @@ class UserDao:
         conn.commit()
         conn.close()
         return id
-    
-    def check_user_subscription(self, userid, casinoid):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM user_subscription WHERE userid=? AND casinoid=?", (userid, casinoid))
-        user_subscription = cursor.fetchone()
-        conn.close()
-        if user_subscription:
-            return True
-        return False
-    
-    def check_user_subscription_by_id(self, userid, casinoid):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT * FROM user_subscription WHERE userid=? AND casinoid=?", (userid, casinoid))
-        user_subscription = cursor.fetchone()
-        conn.close()
-        return True if user_subscription else False
-    
-    def remove_user_subscription(self, userid, casinoid):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("DELETE FROM user_subscription WHERE userid=? AND casinoid=?", (userid, casinoid))
-        conn.commit()
-        conn.close()
-        return userid
-    
-    def get_subscribers(self, casinoid):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT userid FROM user_subscription WHERE casinoid=?", (casinoid,))
-        subscribers = cursor.fetchall()
-        conn.close()
-        return subscribers

@@ -32,6 +32,7 @@ function UserCasinoInfo() {
   useEffect(() => {
     async function fetchCasinos() {
       try {
+        console.log(casinoId)
         const response = await fetch("/check_subscription", {
           method: "POST",
           headers: {
@@ -44,10 +45,10 @@ function UserCasinoInfo() {
         }
         const data = await response.json();
         if(data.status === "subscribed"){
-          setSubscribe("unsubscribe");
+          setSubscribe("Unsubscribe");
         }
         else{
-          setSubscribe("subscribe");
+          setSubscribe("Subscribe");
         }
       } catch (error) {
         console.error("Error fetching casinos:", error);
@@ -100,20 +101,21 @@ function UserCasinoInfo() {
 
   const navigate = useNavigate();
 
-  const handleGameTableClick = (clickedgametablename) => {
-    let row_idx = 0;
-    let column_idx = 0;
-    for (let i = 0; i < gametablename.length; i++) {
-      const row = gametablename[i];
-      for (let j = 0; j < row.length; j++) {
-        if (row[j] === clickedgametablename) {
-          row_idx = i;
-          column_idx = j;
-        }
-      }
-    }
+  const handleGameTableClick = (clickedgametableid) => {
+    // console.log("Clicked game table:", clickedgametablename);
+    // let row_idx = 0;
+    // let column_idx = 0;
+    // for (let i = 0; i < gametablename.length; i++) {
+    //   const row = gametablename[i];
+    //   for (let j = 0; j < row.length; j++) {
+    //     if (row[j] === clickedgametablename) {
+    //       row_idx = i;
+    //       column_idx = j;
+    //     }
+    //   }
+    // }
     // console.log()
-    let clickedgametableid = gametableid[row_idx][column_idx];
+    // let clickedgametableid = gametableid[row_idx][column_idx];
     navigate("/play/gametable/" + clickedgametableid);
   };
 
@@ -145,11 +147,11 @@ function UserCasinoInfo() {
       const data = await response.json();
       if(data.status === "subscribed"){
         alert("Subscribed successfully");
-        setSubscribe("unsubscribe");
+        setSubscribe("Unsubscribe");
       }
       else{
         alert("Unsubscribed");
-        setSubscribe("subscribe");
+        setSubscribe("Subscribe");
       }
     } catch (error) {
       console.error("Error fetching casinos:", error);

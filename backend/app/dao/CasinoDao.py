@@ -15,6 +15,15 @@ class CasinoDao:
     #     conn.commit()
     #     conn.close()
     #     return casino.get_id()
+
+    def get_casino(self, id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM casino_token_mg WHERE casinoid = ?", (id,))
+        result = cursor.fetchone()
+        conn.close()
+        casino = Casino(*result)
+        return casino
     
     def add_casinoTokenMg(self, casinoId, tokenCounterId, managerId, casinoType):
         conn = get_db_connection()
@@ -22,10 +31,11 @@ class CasinoDao:
         random_number = random.randint(0, 100000)
         casinoName = "Casino" + casinoType + "-" + str(random_number)
         tokenCounterName = "TokenCounter" + "-" + str(random_number)
+        casino = Casino(casinoId, casinoName, tokenCounterName, tokenCounterId, managerId)
         cursor.execute("INSERT INTO casino_token_mg (casinoid, casinoname, tokencountername, tokencounterid, managerid) VALUES (?, ?, ?, ?, ?)", (casinoId, casinoName, tokenCounterName, tokenCounterId, managerId))
         conn.commit()
         conn.close()
-        return
+        return casino
     
     def add_casinogametable(self, casinoId, gameTableId):
         conn = get_db_connection()

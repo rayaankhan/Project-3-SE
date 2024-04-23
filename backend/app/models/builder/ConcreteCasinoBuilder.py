@@ -83,13 +83,13 @@ class ConcreteCasinoBuilder(CasinoBuilder):
     def getResult(self, managerId, casinoType):
         TablesList = self.TableA + self.TableB + self.TableC + self.TableD
         casino_id = "casino" + casinoType + "_" + str(uuid.uuid4())
-        self.CasinoDao.add_casinoTokenMg(casino_id, self.TokenCounterId, managerId, casinoType)
+        casino = self.CasinoDao.add_casinoTokenMg(casino_id, self.TokenCounterId, managerId, casinoType)
         for gameTableid in TablesList:
             self.CasinoDao.add_casinogametable(casino_id, gameTableid)
         for barId in self.Bar:
             self.CasinoDao.add_casinobar(casino_id, barId)
 
-        return casino_id
+        return casino
 
 
 
