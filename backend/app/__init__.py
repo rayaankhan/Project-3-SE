@@ -62,6 +62,9 @@ def create_tables():
 
     cursor.execute("CREATE TABLE IF NOT EXISTS user_subscription (casinoid varchar(255), userid varchar(255), FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE, FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE)")
     conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS notifications (notificationid varchar(255) PRIMARY KEY, userid varchar(255), casinoid varchar(255), message varchar(255), FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE)")
+    conn.commit()
     
     conn.close()
 

@@ -89,3 +89,12 @@ class UserDao:
         conn.commit()
         conn.close()
         return id
+    
+    def get_user_notifications(self, userId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        # join the notifications table with the casino_token_mg table to get the casinoname
+        cursor.execute("SELECT n.message, c.casinoname FROM notifications n JOIN casino_token_mg c ON n.casinoid = c.casinoid WHERE n.userid=?", (userId,))
+        notifications = cursor.fetchall()
+        conn.close()
+        return notifications

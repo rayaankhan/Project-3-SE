@@ -99,3 +99,18 @@ def check_subscription():
         return jsonify({'status': 'subscribed'})
     else:
         return jsonify({'status': 'unsubscribed'})
+    
+@app.route('/get_user_notifications', methods=['POST'])
+def get_user_notifications():
+    userId = request.json['userId']
+    notifications = user_dao.get_user_notifications(userId)
+    print(notifications)
+    # to return the notifications first we need to convert the list of tuples to a list of dictionaries
+    notifications_list = []
+    for notification in notifications:
+        notification_dict = {
+            "message": notification[0],
+            "casinoname": notification[1]
+        }
+        notifications_list.append(notification_dict)
+    return jsonify({"notifications": notifications_list})

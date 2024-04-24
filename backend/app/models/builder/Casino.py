@@ -70,10 +70,11 @@ class Casino(Subject):
             user = user_dao.get_user_by_id(subscriptionId)
             if(type(user) is User):
                 user.update(message)
+        return subscriptionIds
 
     def send_notification(self, message):
         print(f"Casino {self.__casinoid} is sending notification: {message}")
-        self.notify(message)
+        return self.notify(message)
     
 
     

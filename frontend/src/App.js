@@ -18,6 +18,7 @@ import BarInfo from './pages/Manager/BarInfo';
 import UserCasinoInfo from './pages/User/UserCasinoInfo';
 import GameTablePlay from './pages/User/GameTablePlay';
 import BarOrder from './pages/User/BarOrder';
+import UserNotifications from './pages/User/UserNotifications';
 
 function App() {
   const [userRole, setUserRole] = useState(null);
@@ -43,7 +44,8 @@ function App() {
         <Route path="/user/:casinoId" element={<UserCasinoInfo />} />
         <Route path="/play/gametable/:gametableId" element={<GameTablePlay />} />
         <Route path="/order/bar/:barId" element={<BarOrder />} />
-        
+        <Route path="/notifications" element={<UserNotifications />} />
+
       </Routes>
     </BrowserRouter>
   );

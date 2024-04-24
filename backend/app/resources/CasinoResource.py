@@ -364,6 +364,9 @@ def notify():
     text = request.json['text']
 
     casino = casino_dao.get_casino(casinoId)
-    casino.send_notification(text)
+    subsIds = casino.send_notification(text)
+
+    # save notification in database
+    casino_dao.add_notification(casinoId, text, subsIds)
 
     return jsonify({'status':'Success'})
