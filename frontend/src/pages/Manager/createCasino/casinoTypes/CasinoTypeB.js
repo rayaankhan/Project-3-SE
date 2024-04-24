@@ -24,7 +24,7 @@ function CasinoTypeB() {
 
     // Send form data to the backend
     try {
-      const response = await fetch("http://localhost:5000/casino/add", {
+      const response = await fetch("http://localhost:4000/casino/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

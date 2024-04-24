@@ -6,6 +6,8 @@ function UserCasinoInfo() {
   const { casinoId } = useParams();
   const userId = localStorage.getItem("userId");
   const [subscribe, setSubscribe] = useState("Subscribe");
+  const [tokens, setTokens] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState('cash'); // default payment method
   const [gametableid, setGametableid] = useState([
     [], // gametableA_list
     [], // gametableB_list
@@ -57,6 +59,21 @@ function UserCasinoInfo() {
     fetchCasinos();
   }, [userId, casinoId]);
 
+  // Function to fetch balance from the backend
+  const fetchBalance = async () => {
+    try {
+        const response = await fetch(`http://localhost:4000/wallet/balance?user_id=${userId}`);
+        const data = await response.json();
+        console.log(data);
+        setTokens(data); // Adjusted assuming data.balance holds the balance
+    } catch (error) {
+        console.error('Failed to fetch balance:', error);
+    }
+};
+  // useEffect hook to call fetchBalance when the component mounts
+  useEffect(() => {
+    fetchBalance();
+}, []); // The empty array ensures this effect runs only once after the initial render
 
 
   useEffect(() => {
@@ -155,10 +172,76 @@ function UserCasinoInfo() {
       console.error("Error fetching casinos:", error);
     }
   };
+  // Function to add money to the wallet
+const addMoney = async (amountToAdd) => {
+  try {
+    const response = await fetch(`http://localhost:4000/wallet/addBalance`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // calculate the total wallet balance as (balance+amountToAdd)
+      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod})
+    });
+    const data = await response.json();
+    console.log(data);
+    fetchBalance();  // Re-fetch balance to update the displayed amount
+  } catch (error) {
+    console.error('Failed to add money:', error);
+  }
+};
+const exitCasino = async () => {
+  try {
+    const response = await fetch(`http://localhost:4000/wallet/update`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user_id: userId, amount: 0 }) // Set balance to 0
+    });
+    const data = await response.json();
+    console.log(data);
+    fetchBalance();
+    if (data) {
+      alert("Tokens have been cashed out. Exiting casino...");
+      navigate('/casinos');
+    } else {
+      // Handle the case where cashout was not successful
+      alert("Failed to cash out tokens. Please try again.");
+    }
+      // Re-fetch balance to update the displayed amount
+    // navigate('/casinos');
+  } catch (error) {
+    console.error('Failed to exit casino:', error);
+  }
+};
 
   return (
     <div>
       <Navbar />
+      <div>
+        <label>
+          Cash
+          <input type="radio" name="paymentMethod" value="cash"
+            checked={paymentMethod === 'cash'}
+            onChange={() => setPaymentMethod('cash')} />
+        </label>
+        <label>
+          Card
+          <input type="radio" name="paymentMethod" value="card"
+            checked={paymentMethod === 'card'}
+            onChange={() => setPaymentMethod('card')} />
+        </label>
+        <label>
+          UPI
+          <input type="radio" name="paymentMethod" value="upi"
+            checked={paymentMethod === 'upi'}
+            onChange={() => setPaymentMethod('upi')} />
+        </label>
+        <button onClick={() => addMoney(100)}>Buy 100 Tokens</button>
+      </div>
+      <h2>Your current token balance: {tokens}</h2>
+      <button onClick={exitCasino}>Exit Casino</button>
       <h1 className="text-3xl font-bold underline">
         See all the gametbles and bar and subscribe
       </h1>
