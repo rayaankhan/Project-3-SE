@@ -4,7 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function UserCasinoInfo() {
   const { casinoId } = useParams();
+  const [currency, setCurrency] = useState('INR'); // Default currency
   const userId = localStorage.getItem("userId");
+  const [amountToAdd, setAmountToAdd] = useState('');
   const [subscribe, setSubscribe] = useState("Subscribe");
   const [tokens, setTokens] = useState(0);
   const [paymentMethod, setPaymentMethod] = useState('cash'); // default payment method
@@ -74,7 +76,10 @@ function UserCasinoInfo() {
   useEffect(() => {
     fetchBalance();
 }, []); // The empty array ensures this effect runs only once after the initial render
-
+  const handleCurrencyChange = (selectedCurrency) => {
+    console.log("Currency changed to:", selectedCurrency);
+    setCurrency(selectedCurrency);
+  };
 
   useEffect(() => {
     async function fetchCasinos() {
@@ -181,7 +186,7 @@ const addMoney = async (amountToAdd) => {
         'Content-Type': 'application/json'
       },
       // calculate the total wallet balance as (balance+amountToAdd)
-      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod})
+      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency})
     });
     const data = await response.json();
     console.log(data);
@@ -215,11 +220,43 @@ const exitCasino = async () => {
     console.error('Failed to exit casino:', error);
   }
 };
+const handlePaymentMethodChange = (method) => {
+  setPaymentMethod(method);
+
+  if (method === 'card') {
+    const cardNumber = window.prompt('Please enter your card number:');
+    const password = window.prompt('Please enter your password:');
+  }
+  if (method === 'upi') {
+    const cardNumber = window.prompt('Please enter your upi phone number:');
+    const password = window.prompt('Please enter your password:');
+  }
+};
 
   return (
     <div>
       <Navbar />
       <div>
+        <div>
+          <button
+            onClick={() => handleCurrencyChange('INR')}
+            className={currency === 'INR' ? 'highlighted' : ''}
+          >
+            INR
+          </button>
+          <button
+            onClick={() => handleCurrencyChange('USD')}
+            className={currency === 'USD' ? 'highlighted' : ''}
+          >
+            USD
+          </button>
+        </div>
+        <input
+                      type="number"
+                      value={amountToAdd}
+                      onChange={e => setAmountToAdd(e.target.value)}
+                      placeholder="Amount to add"
+                  />
         <label>
           Cash
           <input type="radio" name="paymentMethod" value="cash"
@@ -230,15 +267,15 @@ const exitCasino = async () => {
           Card
           <input type="radio" name="paymentMethod" value="card"
             checked={paymentMethod === 'card'}
-            onChange={() => setPaymentMethod('card')} />
+            onChange={() => handlePaymentMethodChange('card')} />
         </label>
         <label>
           UPI
           <input type="radio" name="paymentMethod" value="upi"
             checked={paymentMethod === 'upi'}
-            onChange={() => setPaymentMethod('upi')} />
+            onChange={() => handlePaymentMethodChange('upi')} />
         </label>
-        <button onClick={() => addMoney(100)}>Buy 100 Tokens</button>
+        <button onClick={() => addMoney(amountToAdd)}>Purchase tokens</button>
       </div>
       <h2>Your current token balance: {tokens}</h2>
       <button onClick={exitCasino}>Exit Casino</button>

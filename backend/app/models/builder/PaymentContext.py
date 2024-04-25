@@ -7,4 +7,5 @@ class PaymentContext:
         self._strategy = strategy
 
     def execute_payment(self, amount):
+        self._strategy.authorize()
         self._strategy.pay(amount)

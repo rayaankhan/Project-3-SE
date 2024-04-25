@@ -4,3 +4,5 @@ class PaymentStrategy(ABC):
     @abstractmethod
     def pay(self, amount):
         pass
+    def authorize(self):
+        pass

@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 function GameTablePlay() {
   const [balance, setBalance] = useState(0);
   const [inputValue, setInputValue] = useState("");
-  const [maxValue, setMaxValue] = useState(100); // Specify your max value here
+  // const [maxValue, setMaxValue] = useState(100); // Specify your max value here
   const { gametableId } = useParams();
   const [gameResponse, setGameResponse] = useState("");
   const userId = localStorage.getItem("userId");
@@ -14,7 +14,7 @@ function GameTablePlay() {
   const handleChange = (event) => {
     const { value } = event.target;
     // Validate input to ensure it's a number and within the specified range
-    if (!isNaN(value) && Number(value) >= 0 && Number(value) <= maxValue) {
+    if (!isNaN(value) && Number(value) >= 0) {
       setInputValue(value);
     }
   };
@@ -90,13 +90,14 @@ function GameTablePlay() {
     <div>
       <Navbar />
       <h1 className="text-3xl font-bold underline">User GameTablePlay</h1>
+      <h2>Your wallet balance is: {balance} tokens</h2>
       <div className="text-center mt-8">
         <input
           type="number"
           className="border border-gray-300 rounded-md px-4 py-2"
           value={inputValue}
           onChange={handleChange}
-          placeholder={`Enter a number between 0 and ${maxValue}`}
+          placeholder={`Enter money you want to bet`}
         />
         <button
           className="ml-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
