@@ -1,4 +1,6 @@
 from app.models.Observer import Observer
+# from app.dao.CasinoDao import CasinoDao
+# casino_dao = CasinoDao()
 class User(Observer):
     def __init__(self, id, username, email, age, password):
         self.__id = id
@@ -44,6 +46,7 @@ class User(Observer):
             'age': self.__age
         }
     
-    def update(self, message):
-        print(f"User {self.__username} received notification: {message}")
-    
+    def update(self, message, casino_id):
+        # save notification in database
+        # casino_dao.add_notification_to_db(self.__id, message, casino_id)
+        print(f"User {self.__id} received notification: {message}")

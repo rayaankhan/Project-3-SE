@@ -26,8 +26,8 @@ function UserCasino() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ userId: userId }),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch casinos");

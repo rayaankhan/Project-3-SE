@@ -45,6 +45,9 @@ class UserDao:
     
     def create_user(self, username, email, age, password):
         id = "user_" + str(uuid.uuid4())
+        # check if the username is already taken
+        if self.get_user_by_username(username):
+            return None
         # create a User Object
         user = User(id, username, email, age, password)
         conn = get_db_connection()
@@ -93,8 +96,18 @@ class UserDao:
     def get_user_notifications(self, userId):
         conn = get_db_connection()
         cursor = conn.cursor()
-        # join the notifications table with the casino_token_mg table to get the casinoname
+        # join the notifications table with the 
+        # casino_token_mg table to get the casinoname
         cursor.execute("SELECT n.message, c.casinoname FROM notifications n JOIN casino_token_mg c ON n.casinoid = c.casinoid WHERE n.userid=?", (userId,))
         notifications = cursor.fetchall()
         conn.close()
         return notifications
+    
+    def add_notification_to_db(self, userId, message, casino_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO notifications (userid, message, casinoid) VALUES (?, ?, ?)", (userId, message, casino_id))
+        conn.commit()
+        conn.close()
+        return userId
+        

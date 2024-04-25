@@ -1,10 +1,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function Navbar() {
   const [currentTab, setCurrentTab] = useState("home");
-  const role = localStorage.getItem("userRole");
+  const token = localStorage.getItem("token");
+  const decoded = jwtDecode(token);
+  var role = "";
+  if (decoded) {
+     role = decoded.role;
+  }
 
   useEffect(() => {
     // Fetch the current tab from local storage on component mount
@@ -20,6 +26,23 @@ function Navbar() {
     localStorage.setItem("currentTab", tab);
   };
   const logoutClick = () => {
+    // async function logout() {
+    //   try {
+    //     const response = await fetch("/users/logout", {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       credentials: "include",
+    //     });
+    //     if (!response.ok) {
+    //       throw new Error("Failed to logout");
+    //     }
+    //   } catch (error) {
+    //     console.error("Error logging out:", error);
+    //   }
+    // }
+    // logout();
     localStorage.clear();
     window.location.href = "/";
   }

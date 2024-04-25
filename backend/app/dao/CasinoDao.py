@@ -141,11 +141,3 @@ class CasinoDao:
         conn.close()
         return result[0]
     
-    def add_notification(self, casinoId, message, subsIds):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        for subsId in subsIds:
-            cursor.execute("INSERT INTO notifications (notificationid, userid, casinoid, message) VALUES (?, ?, ?, ?)", (str(uuid.uuid4()), subsId, casinoId, message))
-        conn.commit()
-        conn.close()
-        return

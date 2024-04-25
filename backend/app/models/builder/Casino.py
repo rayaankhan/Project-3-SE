@@ -27,22 +27,6 @@ class Casino(Subject):
     
     def get_managerid(self):
         return self.__managerid
-    
-    
-    
-    
-    # # setters
-    # def set_username(self, username):
-    #     self.__username = username
-
-    # def set_email(self, email):
-    #     self.__email = email
-
-    # def set_age(self, age):
-    #     self.__age = age
-
-    # def set_password(self, password):
-    #     self.__password = password
 
     def serialize(self):
         return {
@@ -69,12 +53,12 @@ class Casino(Subject):
             print(f"Sending notification to user {subscriptionId}")
             user = user_dao.get_user_by_id(subscriptionId)
             if(type(user) is User):
-                user.update(message)
-        return subscriptionIds
+                user.update(message, self.__casinoid)
+                user_dao.add_notification_to_db(subscriptionId, message, self.__casinoid)
 
     def send_notification(self, message):
         print(f"Casino {self.__casinoid} is sending notification: {message}")
-        return self.notify(message)
+        self.notify(message)
     
 
     

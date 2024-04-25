@@ -1,18 +1,16 @@
 from flask import Flask
 from flask_cors import CORS
-import os
-import mysql.connector
-# from config import DB_CONFIG
 from config import DB_PATH
+from config import JWT_SECRET_KEY
 import sqlite3
-import mysql.connector
-# from config import DB_CONFIG
-from config import DB_PATH
-import sqlite3
-import uuid
+from flask_bcrypt import Bcrypt
+from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
-CORS(app)
+app.config['JWT_SECRET_KEY'] = JWT_SECRET_KEY
+bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
+CORS(app,origins='http://localhost:3000', supports_credentials=True)
 
 # Function to get a database connection
 def get_db_connection():

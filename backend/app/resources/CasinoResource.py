@@ -1,5 +1,6 @@
 from flask import jsonify
 from app import app
+from flask_jwt_extended import jwt_required, get_jwt_identity
 # from app.dao.CasinoDao import CasinoDao
 from flask import request
 from app.models.builder.CasinoDirector import CasinoDirector
@@ -21,10 +22,11 @@ bar_dao = BarDao()
 staff_dao = StaffDao()
 
 @app.route('/casino/add',methods=['POST'])
+@jwt_required()
 def add_casino():
     # print("i am here boy")
     print(request.json)
-    managerId = request.json['userId']
+    managerId = get_jwt_identity()
     casinoType = request.json['casinoType']
     tableA = request.json['gameTableA']
     tableB = request.json['gameTableB']
@@ -57,10 +59,11 @@ def add_casino():
 
 
 @app.route('/manager_casinos',methods=['POST'])
+@jwt_required()
 def get_manager_casinos():
     # print("i am here boy")
     # print(request.json)
-    managerId = request.json['managerId']
+    managerId = get_jwt_identity()
     casino_list_mg = casino_dao.get_casino_list_mg(managerId)
     casino_list_json = [dict(row) for row in casino_list_mg]
     # print(casino_list_json)
@@ -93,10 +96,11 @@ def get_manager_casinos():
     return jsonify({'status': 'Success', "casino_id_list": final_id_list, "casino_name_list": final_name_list})
 
 @app.route('/all_casinos',methods=['POST'])
+@jwt_required()
 def get_all_casinos():
     # print("i am here boy")
     # print(request.json)
-    userId = request.json['userId']
+    userId = get_jwt_identity()
     all_casino_list = casino_dao.get_all_casinos()
     casino_list_json = [dict(row) for row in all_casino_list]
     # print(casino_list_json)
@@ -360,13 +364,9 @@ def play():
 def notify():
     print("Notifying subsribers")
     casinoId = request.json['casinoId']
-    managerId = request.json['managerId']
     text = request.json['text']
 
     casino = casino_dao.get_casino(casinoId)
-    subsIds = casino.send_notification(text)
-
-    # save notification in database
-    casino_dao.add_notification(casinoId, text, subsIds)
+    casino.send_notification(text)
 
     return jsonify({'status':'Success'})

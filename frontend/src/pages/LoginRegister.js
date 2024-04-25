@@ -50,12 +50,15 @@ function LoginForm() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
+        // credentials: 'include',
       });
 
       if (!response.ok) {
         // Handle error from backend
         const errorData = await response.json();
         console.error('Login failed:', errorData);
+        alert(errorData.error);
+        navigate("/");
       } else {
         // Login successful
         console.log('User logged in successfully!');
@@ -64,9 +67,11 @@ function LoginForm() {
         // save the user id in local storage
         const userData = await response.json();
         console.log('User data:', userData);
-        localStorage.setItem("userId", userData.id);
-        localStorage.setItem("userRole", userData.role);
-        // navigate to the home page
+        // localStorage.setItem("userId", userData.id);
+        // save the token in local storage
+        localStorage.setItem("token", userData.access_token);
+        // token = jwtDecode(userData.access_token);
+        // localStorage.setItem("userRole", token.role);
         navigate("/home");
       }
     } catch (error) {
@@ -133,6 +138,8 @@ function RegisterForm() {
         // Handle error from backend
         const errorData = await response.json();
         console.error('Registration failed:', errorData);
+        alert(errorData.error);
+        navigate("/");
       } else {
         // Registration successful
         console.log('User registered successfully!');

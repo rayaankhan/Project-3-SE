@@ -1,20 +1,24 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Navbar from "../../components/Navbar";
 
 function UserNotifications() {
   const userId = localStorage.getItem("userId");
   const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function fetchNotifications() {
       try {
+        // include the token from local storage in the request to the backend
         const response = await fetch("/get_user_notifications", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ userId: userId }),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch notifications");
@@ -24,11 +28,12 @@ function UserNotifications() {
         setNotifications(data.notifications);
       } catch (error) {
         console.error("Error fetching notifications:", error);
+        navigate("/")
       }
     }
 
     fetchNotifications();
-  }, [userId]);
+  }, []);
   return (
     <div>
       <Navbar />

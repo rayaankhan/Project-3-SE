@@ -11,3 +11,4 @@ DB_CONFIG = {
 }
 
 DB_PATH = 'SE-Project-3.db'
+JWT_SECRET_KEY = "team-17"
