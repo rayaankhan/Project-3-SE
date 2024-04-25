@@ -25,3 +25,10 @@ class TokenWalletDao:
         conn.commit()
         conn.close()
         return user_id
+    def update_transaction(self, user_id, casino_id, amount, transaction_type):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("INSERT INTO final_transactions (userid,casinoid, amount, transaction_type) VALUES (?, ?, ?,?)", (user_id,casino_id, amount, transaction_type))
+        conn.commit()
+        conn.close()
+        return user_id

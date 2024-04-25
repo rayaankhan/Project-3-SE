@@ -56,8 +56,28 @@ def add_balance():
     currency = request.json['currency']
     token_wallet_dao = TokenWalletDao()
     earlier_balance = token_wallet_dao.get_wallet_balance(user_id)
-    print("user_id",user_id)
     final_amt=process_payment(user_id, amount, strategy,currency)
+    
+    total = earlier_balance + int(final_amt)
+    
+    token_wallet_dao.update_wallet_balance(user_id, total)
+    return jsonify({"status": "success"})
+
+@app.route('/wallet/addRecordBalance', methods=['POST'])
+def add_record_balance():
+    user_id = request.json['user_id']
+    amount = request.json['amount']
+    strategy = request.json['strategy'] 
+    currency = request.json['currency']
+    casino_id = request.json['casino_id']
+    token_wallet_dao = TokenWalletDao()
+    earlier_balance = token_wallet_dao.get_wallet_balance(user_id)
+    final_amt=process_payment(user_id, amount, strategy,currency)
+    if int(amount)<0:
+        token_wallet_dao.update_transaction(user_id, casino_id, final_amt, "debit")
+    else:
+        token_wallet_dao.update_transaction(user_id, casino_id, final_amt, "credit")
+    
     total = earlier_balance + int(final_amt)
     
     token_wallet_dao.update_wallet_balance(user_id, total)

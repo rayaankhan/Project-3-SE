@@ -138,6 +138,7 @@ function UserCasinoInfo() {
     // }
     // console.log()
     // let clickedgametableid = gametableid[row_idx][column_idx];
+    localStorage.setItem("casinoid", casinoId);
     navigate("/play/gametable/" + clickedgametableid);
   };
 
@@ -182,13 +183,13 @@ function UserCasinoInfo() {
   // Function to add money to the wallet
 const addMoney = async (amountToAdd) => {
   try {
-    const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
+    const response = await fetch(`http://localhost:5000/wallet/addRecordBalance`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       // calculate the total wallet balance as (balance+amountToAdd)
-      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency})
+      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency,casino_id: casinoId})
     });
     const data = await response.json();
     console.log(data);

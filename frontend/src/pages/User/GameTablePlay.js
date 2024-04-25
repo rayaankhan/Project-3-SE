@@ -9,7 +9,9 @@ function GameTablePlay() {
   const { gametableId } = useParams();
   const [gameResponse, setGameResponse] = useState("");
   const userId = localStorage.getItem("userId");
-  const gametabletype = gametableId[9]
+  const gametabletype = gametableId[9];
+  // fetch casionId from local storage
+  const casinoId = localStorage.getItem("casinoid");
   // console.log("gametableId:", gametableId)
   const handleChange = (event) => {
     const { value } = event.target;
@@ -19,14 +21,16 @@ function GameTablePlay() {
     }
   };
   const addMoney = async (amountToAdd) => {
+    console.log("Amount to add:", amountToAdd);
     try {
-      const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
+      const response = await fetch(`http://localhost:5000/wallet/addRecordBalance`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         // calculate the total wallet balance as (balance+amountToAdd)
-        body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: "cash", currency:"INR"})
+       
+        body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: "cash", currency:"INR",casino_id:casinoId})
       });
       const data = await response.json();
       console.log(data);
