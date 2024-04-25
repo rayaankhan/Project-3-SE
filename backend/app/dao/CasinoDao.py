@@ -44,7 +44,13 @@ class CasinoDao:
         conn.commit()
         conn.close()
         return
-    
+    def get_table_profits(self,tableId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT amount FROM casino_analytics WHERE gametableid = ?", (tableId,))
+        result = cursor.fetchall()
+        conn.close()
+        return result
     def add_casinobar(self, casinoId, barId):
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -52,7 +58,28 @@ class CasinoDao:
         conn.commit()
         conn.close()
         return
-    
+    def get_casino_id_from_name(self, name):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        print("name: ", name)
+        cursor.execute("SELECT casinoid FROM casino_token_mg WHERE casinoname = ?", (name,))
+        result = cursor.fetchone()
+        conn.close()
+        return result[0]
+    def get_table_date_amount(self,casinoId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT datetime, amount FROM casino_analytics WHERE casinoid = ?", (casinoId,))
+        result = cursor.fetchall()
+        conn.close()
+        return result
+    def get_casino_list_user(self, userId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT casinoid, amount FROM final_transactions WHERE userid = ?", (userId,))
+        result = cursor.fetchall()
+        conn.close()
+        return result
     def get_casino_list_mg(self, managerId):
         conn = get_db_connection()
         cursor = conn.cursor()

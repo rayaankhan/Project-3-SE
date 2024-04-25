@@ -4,12 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function UserCasinoInfo() {
   const { casinoId } = useParams();
-  const [currency, setCurrency] = useState('INR'); // Default currency
   const userId = localStorage.getItem("userId");
-  const [amountToAdd, setAmountToAdd] = useState('');
   const [subscribe, setSubscribe] = useState("Subscribe");
-  const [tokens, setTokens] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState('cash'); // default payment method
   const [gametableid, setGametableid] = useState([
     [], // gametableA_list
     [], // gametableB_list
@@ -37,6 +33,7 @@ function UserCasinoInfo() {
     async function fetchCasinos() {
       try {
         console.log(casinoId)
+        console.log(casinoId)
         const response = await fetch("/check_subscription", {
           method: "POST",
           headers: {
@@ -50,8 +47,10 @@ function UserCasinoInfo() {
         const data = await response.json();
         if(data.status === "subscribed"){
           setSubscribe("Unsubscribe");
+          setSubscribe("Unsubscribe");
         }
         else{
+          setSubscribe("Subscribe");
           setSubscribe("Subscribe");
         }
       } catch (error) {
@@ -62,25 +61,7 @@ function UserCasinoInfo() {
     fetchCasinos();
   }, [userId, casinoId]);
 
-  // Function to fetch balance from the backend
-  const fetchBalance = async () => {
-    try {
-        const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
-        const data = await response.json();
-        console.log(data);
-        setTokens(data); // Adjusted assuming data.balance holds the balance
-    } catch (error) {
-        console.error('Failed to fetch balance:', error);
-    }
-};
-  // useEffect hook to call fetchBalance when the component mounts
-  useEffect(() => {
-    fetchBalance();
-}, []); // The empty array ensures this effect runs only once after the initial render
-  const handleCurrencyChange = (selectedCurrency) => {
-    console.log("Currency changed to:", selectedCurrency);
-    setCurrency(selectedCurrency);
-  };
+
 
   useEffect(() => {
     async function fetchCasinos() {
@@ -136,6 +117,19 @@ function UserCasinoInfo() {
     //     }
     //   }
     // }
+  const handleGameTableClick = (clickedgametableid) => {
+    // console.log("Clicked game table:", clickedgametablename);
+    // let row_idx = 0;
+    // let column_idx = 0;
+    // for (let i = 0; i < gametablename.length; i++) {
+    //   const row = gametablename[i];
+    //   for (let j = 0; j < row.length; j++) {
+    //     if (row[j] === clickedgametablename) {
+    //       row_idx = i;
+    //       column_idx = j;
+    //     }
+    //   }
+    // }
     // console.log()
     // let clickedgametableid = gametableid[row_idx][column_idx];
     localStorage.setItem("casinoid", casinoId);
@@ -171,9 +165,11 @@ function UserCasinoInfo() {
       if(data.status === "subscribed"){
         alert("Subscribed successfully");
         setSubscribe("Unsubscribe");
+        setSubscribe("Unsubscribe");
       }
       else{
         alert("Unsubscribed");
+        setSubscribe("Subscribe");
         setSubscribe("Subscribe");
       }
     } catch (error) {
@@ -239,49 +235,6 @@ const handlePaymentMethodChange = (method) => {
   return (
     <div>
       <Navbar />
-      <div>
-        <div>
-          <button
-            onClick={() => handleCurrencyChange('INR')}
-            className={currency === 'INR' ? 'highlighted' : ''}
-          >
-            INR
-          </button>
-          <button
-            onClick={() => handleCurrencyChange('USD')}
-            className={currency === 'USD' ? 'highlighted' : ''}
-          >
-            USD
-          </button>
-        </div>
-        <input
-                      type="number"
-                      value={amountToAdd}
-                      onChange={e => setAmountToAdd(e.target.value)}
-                      placeholder="Amount to add"
-                  />
-        <label>
-          Cash
-          <input type="radio" name="paymentMethod" value="cash"
-            checked={paymentMethod === 'cash'}
-            onChange={() => setPaymentMethod('cash')} />
-        </label>
-        <label>
-          Card
-          <input type="radio" name="paymentMethod" value="card"
-            checked={paymentMethod === 'card'}
-            onChange={() => handlePaymentMethodChange('card')} />
-        </label>
-        <label>
-          UPI
-          <input type="radio" name="paymentMethod" value="upi"
-            checked={paymentMethod === 'upi'}
-            onChange={() => handlePaymentMethodChange('upi')} />
-        </label>
-        <button onClick={() => addMoney(amountToAdd)}>Purchase tokens</button>
-      </div>
-      <h2>Your current token balance: {tokens}</h2>
-      <button onClick={exitCasino}>Exit Casino</button>
       <h1 className="text-3xl font-bold underline">
         See all the gametbles and bar and subscribe
       </h1>

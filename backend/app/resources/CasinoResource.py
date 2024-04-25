@@ -54,10 +54,14 @@ def add_casino():
         return jsonify({'status': 'Failed'})
 
 
+@app.route('/user_casinos',methods=['POST'])
+def get_user_casinos():
+    userId = request.json['userId']
+    casino_list_user = casino_dao.get_casino_list_user(userId)
+    casino_list_json = [dict(row) for row in casino_list_user]
+    return jsonify({'status': 'Success', "final_list": casino_list_json})
 @app.route('/manager_casinos',methods=['POST'])
 def get_manager_casinos():
-    # print("i am here boy")
-    # print(request.json)
     managerId = request.json['managerId']
     casino_list_mg = casino_dao.get_casino_list_mg(managerId)
     casino_list_json = [dict(row) for row in casino_list_mg]
@@ -200,6 +204,38 @@ def get_gametable_info():
     # Now, convert the dictionary into JSON
     gametable_json = json.dumps(gametable_dict)
     return jsonify({'status': 'Success', 'gametable_info': gametable_json})
+
+
+
+
+
+
+
+
+@app.route('/gametable_analytics',methods=['POST'])
+def get_gametable_analytics():
+    print("Getting gametable info")
+    gametableName = request.json['gameTables']
+    # print("gametableName: ", gametableName)
+    gametable_info_list = []
+    for table in gametableName:
+        gametable_info = gametable_dao.get_table_id_from_name(table)
+        if gametable_info:
+            table_id = gametable_info
+            table_date_amount = gametable_dao.get_table_date_amount(table_id)
+            table_date_json = [dict(row) for row in table_date_amount]
+            gametable_dict_list=[]
+            for row in table_date_json:
+                gametable_dict = {
+                    'gametablename': table,
+                    'datetime': row['datetime'],
+                    'amount': row['amount']
+                }
+                gametable_dict_list.append(gametable_dict)
+            gametable_info_list.extend(gametable_dict_list)
+    print(gametable_info_list)
+    return jsonify({'status': 'Success', 'gametable_info_list': gametable_info_list})
+
 
 @app.route('/bar_info',methods=['POST'])
 def get_bar_info():
@@ -363,3 +399,31 @@ def notify():
     casino_dao.add_notification(casinoId, text, subsIds)
 
     return jsonify({'status':'Success'})
+
+
+@app.route('/casino_analytics',methods=['POST'])
+def get_casino_analytics():
+    print("Getting casino info")
+    casinoNames = request.json['casinos']
+    # print("gametableName: ", gametableName)
+    casino_info_list = []
+    for casino_ in casinoNames:
+        casino = casino_['name']
+        casino_info = casino_dao.get_casino_id_from_name(casino)
+        if casino_info:
+            casino_id = casino_info
+            table_date_amount = casino_dao.get_table_date_amount(casino_id)
+            table_date_json = [dict(row) for row in table_date_amount]
+            # table_date_json can have different lengths based on casino id
+            # I will iterate over all the values and create unique dictionaries so that no input is left behind
+            casino_dict_list = []
+            for row in table_date_json:
+                casino_dict = {
+                    'casinoname': casino,
+                    'datetime': row['datetime'],
+                    'amount': row['amount']
+                }
+                casino_dict_list.append(casino_dict)
+            casino_info_list.extend(casino_dict_list)
+    print("bum:",casino_info_list)
+    return jsonify({'status': 'Success', 'casino_info_list': casino_info_list})
