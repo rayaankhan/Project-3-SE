@@ -13,7 +13,7 @@ function Wallet() {
     // Function to fetch balance from the backend
     const fetchBalance = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
+            const response = await fetch(`http://localhost:5001/wallet/balance?user_id=${userId}`);
             const data = await response.json();
             console.log(data);
             setBalance(data); // Adjusted assuming data.balance holds the balance
@@ -24,7 +24,7 @@ function Wallet() {
     // function to create wallet
     const createWallet = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/wallet/create`, {
+            const response = await fetch(`http://localhost:5001/wallet/create`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -42,7 +42,7 @@ function Wallet() {
     // Function to add money to the wallet
     const addMoney = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/wallet/update`, {
+            const response = await fetch(`http://localhost:5001/wallet/update`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

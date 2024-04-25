@@ -44,7 +44,7 @@ function LoginForm() {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/users/login', { 
+      const response = await fetch('http://localhost:5001/users/login', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -126,7 +126,7 @@ function RegisterForm() {
     };
 
     try {
-      const response = await fetch('http://localhost:5000/users/add', { 
+      const response = await fetch('http://localhost:5001/users/add', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

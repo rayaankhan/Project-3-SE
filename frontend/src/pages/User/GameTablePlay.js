@@ -20,7 +20,7 @@ function GameTablePlay() {
   };
   const addMoney = async (amountToAdd) => {
     try {
-      const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
+      const response = await fetch(`http://localhost:5001/wallet/addBalance`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ function GameTablePlay() {
   };
   const fetchBalance = async () => {
     try {
-        const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
+        const response = await fetch(`http://localhost:5001/wallet/balance?user_id=${userId}`);
         const data = await response.json();
         console.log(data);
         setBalance(data); // Adjusted assuming data.balance holds the balance

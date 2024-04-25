@@ -23,7 +23,7 @@ function AdminHome() {
       salary,
     };
 
-    fetch("http://localhost:5000/manager/add", {
+    fetch("http://localhost:5001/manager/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -26,7 +26,7 @@ function BarOrder() {
     };
   const addMoney = async (amountToAdd) => {
     try {
-      const response = await fetch(`http://localhost:5000/bar/pay`, {
+      const response = await fetch(`http://localhost:5001/bar/pay`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

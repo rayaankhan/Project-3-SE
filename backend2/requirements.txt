@@ -1,0 +1,5 @@
+Flask
+sqlite3
+flask_cors
+Flask-JWT-Extended
+flask-bcrypt
