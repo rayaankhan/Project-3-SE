@@ -1,13 +1,10 @@
+import random
 from flask import Flask
 from flask_cors import CORS
 import os
 import mysql.connector
-# from config import DB_CONFIG
-from config import DB_PATH
 import sqlite3
 import mysql.connector
-# from config import DB_CONFIG
-from config import DB_PATH
 import sqlite3
 import uuid
 
@@ -16,14 +13,15 @@ CORS(app)
 
 # Function to get a database connection
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(r"C:\Users\shivh\Downloads\Project-3-SE-yatharth\Project-3-SE-yatharth\backend\SE-Project-3.db")
     conn.row_factory = sqlite3.Row
     return conn
-
 def create_tables():
     conn = get_db_connection()
     cursor = conn.cursor()
     # create your tables here
+    cursor.execute("CREATE TABLE IF NOT EXISTS final_transactions (txnid varchar(255) PRIMARY KEY, userid varchar(255), casinoid varchar(255), amount int, datetime varchar(255), FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE)")
+    conn.commit()
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id varchar(255) PRIMARY KEY, username varchar(255), email varchar(255), age int, password varchar(255))")
     conn.commit()
 
@@ -62,6 +60,9 @@ def create_tables():
 
     cursor.execute("CREATE TABLE IF NOT EXISTS user_subscription (casinoid varchar(255), userid varchar(255), FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE, FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE)")
     conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS notifications (notificationid varchar(255) PRIMARY KEY, userid varchar(255), casinoid varchar(255), message varchar(255), FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE)")
+    conn.commit()
     
     conn.close()
 
@@ -96,5 +97,3 @@ if __name__ == '__main__':
 from app.resources.UserResource import *
 from app.resources.ManagerResource import *
 from app.resources.CasinoResource import *
-from app.resources.TokenWalletResource import *
-from app.models.builder.ConcreteStrategy import *

@@ -15,6 +15,15 @@ class CasinoDao:
     #     conn.commit()
     #     conn.close()
     #     return casino.get_id()
+
+    def get_casino(self, id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM casino_token_mg WHERE casinoid = ?", (id,))
+        result = cursor.fetchone()
+        conn.close()
+        casino = Casino(*result)
+        return casino
     
     def add_casinoTokenMg(self, casinoId, tokenCounterId, managerId, casinoType):
         conn = get_db_connection()
@@ -22,10 +31,11 @@ class CasinoDao:
         random_number = random.randint(0, 100000)
         casinoName = "Casino" + casinoType + "-" + str(random_number)
         tokenCounterName = "TokenCounter" + "-" + str(random_number)
+        casino = Casino(casinoId, casinoName, tokenCounterName, tokenCounterId, managerId)
         cursor.execute("INSERT INTO casino_token_mg (casinoid, casinoname, tokencountername, tokencounterid, managerid) VALUES (?, ?, ?, ?, ?)", (casinoId, casinoName, tokenCounterName, tokenCounterId, managerId))
         conn.commit()
         conn.close()
-        return
+        return casino
     
     def add_casinogametable(self, casinoId, gameTableId):
         conn = get_db_connection()
@@ -34,7 +44,13 @@ class CasinoDao:
         conn.commit()
         conn.close()
         return
-    
+    def get_table_profits(self,tableId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT amount FROM casino_analytics WHERE gametableid = ?", (tableId,))
+        result = cursor.fetchall()
+        conn.close()
+        return result
     def add_casinobar(self, casinoId, barId):
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -42,7 +58,28 @@ class CasinoDao:
         conn.commit()
         conn.close()
         return
-    
+    def get_casino_id_from_name(self, name):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        print("name: ", name)
+        cursor.execute("SELECT casinoid FROM casino_token_mg WHERE casinoname = ?", (name,))
+        result = cursor.fetchone()
+        conn.close()
+        return result[0]
+    def get_table_date_amount(self,casinoId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT datetime, amount FROM casino_analytics WHERE casinoid = ?", (casinoId,))
+        result = cursor.fetchall()
+        conn.close()
+        return result
+    def get_casino_list_user(self, userId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT casinoid, amount FROM final_transactions WHERE userid = ?", (userId,))
+        result = cursor.fetchall()
+        conn.close()
+        return result
     def get_casino_list_mg(self, managerId):
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -130,3 +167,12 @@ class CasinoDao:
         result = cursor.fetchone()
         conn.close()
         return result[0]
+    
+    def add_notification(self, casinoId, message, subsIds):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        for subsId in subsIds:
+            cursor.execute("INSERT INTO notifications (notificationid, userid, casinoid, message) VALUES (?, ?, ?, ?)", (str(uuid.uuid4()), subsId, casinoId, message))
+        conn.commit()
+        conn.close()
+        return

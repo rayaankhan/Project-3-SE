@@ -1,4 +1,5 @@
-class User:
+from app.models.Observer import Observer
+class User(Observer):
     def __init__(self, id, username, email, age, password):
         self.__id = id
         self.__username = username
@@ -43,5 +44,6 @@ class User:
             'age': self.__age
         }
     
-
+    def update(self, message):
+        print(f"User {self.__username} received notification: {message}")
     
