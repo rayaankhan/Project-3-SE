@@ -99,3 +99,5 @@ if __name__ == '__main__':
 from app.resources.UserResource import *
 from app.resources.ManagerResource import *
 from app.resources.CasinoResource import *
+from app.resources.TokenWalletResource import *
+from app.models.builder.ConcreteStrategy import *

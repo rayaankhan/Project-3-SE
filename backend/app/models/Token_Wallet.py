@@ -1,4 +1,3 @@
-
 class Token_Wallet():
     def __init__(self, walletid, userid):
         self.__walletid = walletid
