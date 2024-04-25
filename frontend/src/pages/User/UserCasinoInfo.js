@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function UserCasinoInfo() {
   const { casinoId } = useParams();
+  localStorage.setItem("casinoId", casinoId);
   const [currency, setCurrency] = useState('INR'); // Default currency
   const userId = localStorage.getItem("userId");
   const [amountToAdd, setAmountToAdd] = useState('');
@@ -41,6 +42,7 @@ function UserCasinoInfo() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ userId: userId, casinoId: casinoId }),
         });
@@ -65,13 +67,20 @@ function UserCasinoInfo() {
   // Function to fetch balance from the backend
   const fetchBalance = async () => {
     try {
-        const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
-        const data = await response.json();
-        console.log(data);
-        setTokens(data); // Adjusted assuming data.balance holds the balance
+      const response = await fetch(`http://localhost:5000/wallet/balance`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const data = await response.json();
+      console.log(data);
+      setTokens(data); // Adjusted assuming data.balance holds the balance
     } catch (error) {
-        console.error('Failed to fetch balance:', error);
-    }
+      console.error("Failed to fetch balance:", error);
+}
 };
   // useEffect hook to call fetchBalance when the component mounts
   useEffect(() => {
@@ -89,6 +98,7 @@ function UserCasinoInfo() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ userId: userId, casinoId: casinoId }),
         });
@@ -160,6 +170,7 @@ function UserCasinoInfo() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ userId: userId, casinoId: casinoId }),
       });
@@ -182,13 +193,14 @@ function UserCasinoInfo() {
   // Function to add money to the wallet
 const addMoney = async (amountToAdd) => {
   try {
-    const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
+    const response = await fetch(`http://localhost:5000/wallet/addRecordBalance`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       // calculate the total wallet balance as (balance+amountToAdd)
-      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency})
+      body: JSON.stringify({ userId: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency,casinoId:casinoId})
     });
     const data = await response.json();
     console.log(data);
@@ -202,7 +214,8 @@ const exitCasino = async () => {
     const response = await fetch(`http://localhost:5000/wallet/update`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: JSON.stringify({ user_id: userId, amount: 0 }) // Set balance to 0
     });

@@ -57,8 +57,10 @@ def add_casino():
 
 
 @app.route('/user_casinos',methods=['POST'])
+@jwt_required()
 def get_user_casinos():
-    userId = request.json['userId']
+    userId = get_jwt_identity()
+    print("user id found: ", userId)
     casino_list_user = casino_dao.get_casino_list_user(userId)
     casino_list_json = [dict(row) for row in casino_list_user]
     return jsonify({'status': 'Success', "final_list": casino_list_json})

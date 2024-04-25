@@ -11,8 +11,6 @@ function ManagerAnalytics() {
   const [casinos, setCasinos] = useState([]);
   const [casinoInfo, setCasinoInfo] = useState([]);
   const [casinoData, setCasinoData] = useState([]);
-  let managerId = localStorage.getItem('userId');
-
   useEffect(() => {
     async function fetchData() {
       try {
@@ -20,6 +18,7 @@ function ManagerAnalytics() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
     
           body: JSON.stringify({casinos: casinos}),
@@ -93,8 +92,9 @@ function ManagerAnalytics() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          body: JSON.stringify({ managerId: managerId }),
+          body: JSON.stringify({}),
         });
         if (!response.ok) {
           throw new Error("Failed to fetch casinos");
@@ -112,7 +112,7 @@ function ManagerAnalytics() {
     }
 
     fetchCasinos();
-  }, [managerId]);
+  }, []);
   const handleCasinoClick = (casinoId) => {
     navigate(`/mcasinosanalytics/${casinoId}`);
   };

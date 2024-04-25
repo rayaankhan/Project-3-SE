@@ -13,14 +13,21 @@ function Wallet() {
     // Function to fetch balance from the backend
     const fetchBalance = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
+            const response = await fetch(`http://localhost:5000/wallet/balance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
+            });
+
             const data = await response.json();
             console.log(data);
             setBalance(data); // Adjusted assuming data.balance holds the balance
-        } catch (error) {
+        }catch (error) {
             console.error('Failed to fetch balance:', error);
-        }
-    };
+}
+};
     // function to create wallet
     const createWallet = async () => {
         try {

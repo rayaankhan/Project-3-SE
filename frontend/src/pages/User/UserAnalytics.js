@@ -20,6 +20,7 @@ function UserAnalytics() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ userId: userId }),
         });
@@ -28,42 +29,43 @@ function UserAnalytics() {
         }
         const data = await response.json();
         console.log("Casinos of User data:", data);
-        const modifiedCasinoInfo = data
-        // const modifiedCasinoInfo = data.casinos.map((casinoInfo) => {
-        //   const datetimeParts = casinoInfo.datetime.split(" ");
-        //   const date = datetimeParts[0];
-        //   const time = datetimeParts[1];
-        //   return {
-        //     ...casinoInfo,
-        //     date,
-        //     time
-        //   };
-        // }
-        setCasinoInfo(data.casinos);
+        // const modifiedCasinoInfo = data
+        const modifiedCasinoInfo = data.final_list.map((casinoInfo) => {
+          const datetimeParts = casinoInfo.datetime.split(" ");
+          const date = datetimeParts[0];
+          const time = datetimeParts[1];
+          return {
+            ...casinoInfo,
+            date,
+            time
+          };
+        })
+        setCasinoInfo(modifiedCasinoInfo);
+        // console.log("mod_val:",modifiedCasinoInfo);
 
         const casinoNetAmounts = {};
         modifiedCasinoInfo.forEach((casinoInfo) => {
-          const { casinoname, date, amount } = casinoInfo;
-          if (casinoname in casinoNetAmounts) {
-            if (date in casinoNetAmounts[casinoname]) {
-              casinoNetAmounts[casinoname][date] += amount;
+          const { casinoid, date, amount } = casinoInfo;
+          if (casinoid in casinoNetAmounts) {
+            if (date in casinoNetAmounts[casinoid]) {
+              casinoNetAmounts[casinoid][date] += amount;
             } else {
-              casinoNetAmounts[casinoname][date] = amount;
+              casinoNetAmounts[casinoid][date] = amount;
             }
           } else {
-            casinoNetAmounts[casinoname] = { [date]: amount };
+            casinoNetAmounts[casinoid] = { [date]: amount };
           }
         });
-        const sortedCasinoNetAmounts = Object.entries(casinoNetAmounts).map(([casinoname, netAmounts]) => ({
-          casinoname,
+        const sortedCasinoNetAmounts = Object.entries(casinoNetAmounts).map(([casinoid, netAmounts]) => ({
+          casinoid,
           netAmounts: Object.entries(netAmounts).sort((a, b) => new Date(a[0]) - new Date(b[0])),
         }));
 
         // Sort the sortedCasinoNetAmounts array based on the casinoname
-        sortedCasinoNetAmounts.sort((a, b) => a.casinoname.localeCompare(b.casinoname));
+        sortedCasinoNetAmounts.sort((a, b) => a.casinoid.localeCompare(b.casinoid));
         
-        console.log(sortedCasinoNetAmounts);
         setCasinoData(sortedCasinoNetAmounts);
+        console.log("boo:",sortedCasinoNetAmounts);
         
         // Process the data received from the backend
       } catch (error) {
@@ -122,7 +124,7 @@ function UserAnalytics() {
                     },
                     title: {
                       display: true,
-                      text: `Net Amounts for ${casino.casinoname}`
+                      text: `Net Amounts for ${casino.casinoid}`
                     }
                   }
                 }}

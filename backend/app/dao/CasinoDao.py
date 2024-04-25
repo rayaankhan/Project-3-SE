@@ -76,8 +76,9 @@ class CasinoDao:
     def get_casino_list_user(self, userId):
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT casinoid, amount FROM final_transactions WHERE userid = ?", (userId,))
+        cursor.execute("SELECT casinoid, amount, datetime FROM final_transactions WHERE userid = ?", (userId,))
         result = cursor.fetchall()
+        print("this is the result: ", result)
         conn.close()
         return result
     def get_casino_list_mg(self, managerId):
