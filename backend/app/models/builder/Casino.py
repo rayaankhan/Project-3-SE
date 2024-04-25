@@ -27,22 +27,6 @@ class Casino(Subject):
     
     def get_managerid(self):
         return self.__managerid
-    
-    
-    
-    
-    # # setters
-    # def set_username(self, username):
-    #     self.__username = username
-
-    # def set_email(self, email):
-    #     self.__email = email
-
-    # def set_age(self, age):
-    #     self.__age = age
-
-    # def set_password(self, password):
-    #     self.__password = password
 
     def serialize(self):
         return {

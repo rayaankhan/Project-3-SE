@@ -61,7 +61,7 @@ function GameTablePlay() {
         </button>
         {gameResponse && (
           <div className="mt-4">
-            <p>Final Amount: {gameResponse}</p>
+            <p>Reward: {gameResponse}</p>
           </div>
         )}
       </div>
