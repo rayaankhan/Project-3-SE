@@ -6,6 +6,7 @@ import UserHome from './pages/User/UserHome';
 import ManagerHome from './pages/Manager/ManagerHome';
 import AdminHome from './pages/AdminHome';
 import {LoginRegister} from './pages/LoginRegister';
+import Wallet from './pages/User/Wallet';
 import ProtectedRoute from './components/ProtectedRoute';
 import UserAnalytics from './pages/User/UserAnalytics';
 import ManagerAnalytics from './pages/Manager/ManagerAnalytics';
@@ -20,9 +21,8 @@ import UserCasinoInfo from './pages/User/UserCasinoInfo';
 import GameTablePlay from './pages/User/GameTablePlay';
 import BarOrder from './pages/User/BarOrder';
 import UserNotifications from './pages/User/UserNotifications';
-import Wallet from './pages/User/Wallet';
+import MCasinoAnalyticInfo from './pages/Manager/MCasinoAnalyticInfo';
 import {jwtDecode} from "jwt-decode";
-
 
 function App() {
   const [userRole, setUserRole] = useState(null);
@@ -41,12 +41,13 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginRegister />} />
         <Route path="/home" element={userRole === 'admin' ? <AdminHome /> : userRole === 'manager' ? <ManagerHome /> : <UserHome />} />
-        <Route path="/analytics" element={userRole === 'user' ? <UserAnalytics />:<ManagerAnalytics />}/>
+        <Route path="/analytics" element={userRole === 'manager' ? <ManagerAnalytics />:<UserAnalytics />}/>
         <Route path="/create-casino" element={<CreateCasino />} />
         <Route path="/create-casino/customize" element={<CasinoTypeRouter />} />
-        <Route path="/user/wallet" element={<Wallet/>}/>
         <Route path="/casinos" element={userRole === 'manager' ? <ManagerCasino /> : <UserCasino />} />
         <Route path="/casinos/:casinoId" element={<CasinoInfo />} />
+        <Route path="/user/wallet" element={<Wallet/>}/>
+        <Route path="/mcasinosanalytics/:casinoId" element={<MCasinoAnalyticInfo />} />
         <Route path="/gametable/:gametableId" element={<GameTableInfo />} />
         <Route path="/bar/:barId" element={<BarInfo />} />
         <Route path="/user/:casinoId" element={<UserCasinoInfo />} />

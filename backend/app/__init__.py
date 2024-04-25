@@ -1,3 +1,4 @@
+import random
 from flask import Flask
 from flask_cors import CORS
 from config import DB_PATH
@@ -17,11 +18,12 @@ def get_db_connection():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
-
 def create_tables():
     conn = get_db_connection()
     cursor = conn.cursor()
     # create your tables here
+    cursor.execute("CREATE TABLE IF NOT EXISTS final_transactions (txnid varchar(255) PRIMARY KEY, userid varchar(255), casinoid varchar(255), amount int, datetime varchar(255), FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE)")
+    conn.commit()
     cursor.execute("CREATE TABLE IF NOT EXISTS users (id varchar(255) PRIMARY KEY, username varchar(255), email varchar(255), age int, password varchar(255))")
     conn.commit()
 
