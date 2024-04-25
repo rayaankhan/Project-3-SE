@@ -20,6 +20,7 @@ import UserCasinoInfo from './pages/User/UserCasinoInfo';
 import GameTablePlay from './pages/User/GameTablePlay';
 import BarOrder from './pages/User/BarOrder';
 import UserNotifications from './pages/User/UserNotifications';
+import Wallet from './pages/User/Wallet';
 import {jwtDecode} from "jwt-decode";
 
 
@@ -39,18 +40,20 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginRegister />} />
-        <Route path='/home' element={<ProtectedRoute element={userRole === 'admin' ? <AdminHome /> : userRole === 'manager' ? <ManagerHome /> : <UserHome />} />} />
-        <Route path='/analytics' element={<ProtectedRoute element={userRole === 'user' ? <UserAnalytics />:<ManagerAnalytics />} />} />
-        <Route path='/create-casino' element={<ProtectedRoute element={<CreateCasino />} />} />
-        <Route path='/create-casino/customize' element={<ProtectedRoute element={<CasinoTypeRouter />} />} />
-        <Route path='/casinos' element={<ProtectedRoute element={userRole === 'manager' ? <ManagerCasino /> : <UserCasino />} />} />
-        <Route path='/casinos/:casinoId' element={<ProtectedRoute element={<CasinoInfo />} />} />
-        <Route path='/gametable/:gametableId' element={<ProtectedRoute element={<GameTableInfo />} />} />
-        <Route path='/bar/:barId' element={<ProtectedRoute element={<BarInfo />} />} />
-        <Route path='/user/:casinoId' element={<ProtectedRoute element={<UserCasinoInfo />} />} />
-        <Route path='/play/gametable/:gametableId' element={<ProtectedRoute element={<GameTablePlay />} />} />
-        <Route path='/order/bar/:barId' element={<ProtectedRoute element={<BarOrder />} />} />
-        <Route path='/notifications' element={<ProtectedRoute element={<UserNotifications />} />} />
+        <Route path="/home" element={userRole === 'admin' ? <AdminHome /> : userRole === 'manager' ? <ManagerHome /> : <UserHome />} />
+        <Route path="/analytics" element={userRole === 'user' ? <UserAnalytics />:<ManagerAnalytics />}/>
+        <Route path="/create-casino" element={<CreateCasino />} />
+        <Route path="/create-casino/customize" element={<CasinoTypeRouter />} />
+        <Route path="/user/wallet" element={<Wallet/>}/>
+        <Route path="/casinos" element={userRole === 'manager' ? <ManagerCasino /> : <UserCasino />} />
+        <Route path="/casinos/:casinoId" element={<CasinoInfo />} />
+        <Route path="/gametable/:gametableId" element={<GameTableInfo />} />
+        <Route path="/bar/:barId" element={<BarInfo />} />
+        <Route path="/user/:casinoId" element={<UserCasinoInfo />} />
+        <Route path="/play/gametable/:gametableId" element={<GameTablePlay />} />
+        <Route path="/order/bar/:barId" element={<BarOrder />} />
+        <Route path="/notifications" element={<UserNotifications />} />
+
       </Routes>
     </BrowserRouter>
   );

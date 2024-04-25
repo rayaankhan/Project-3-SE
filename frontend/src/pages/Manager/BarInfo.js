@@ -177,7 +177,7 @@ function BarInfo() {
       </div>
       <div>
         <button onClick={handleDelete} className="btn btn-primary">
-          Delete GameTable
+          Delete Bar
         </button>
       </div>
     </div>

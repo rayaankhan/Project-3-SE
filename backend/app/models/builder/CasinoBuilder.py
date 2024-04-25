@@ -1,6 +1,6 @@
 from abc import ABC,abstractmethod
 
-class CasinoBuilder(ABC):
+class CasinoBuilder():
 
     @abstractmethod
     def constructGameTableA(number):
