@@ -7,7 +7,10 @@ function GameTablePlay() {
   const [maxValue, setMaxValue] = useState(100); // Specify your max value here
   const { gametableId } = useParams();
   const [gameResponse, setGameResponse] = useState("");
-  const gametabletype = gametableId[9]
+  const userId = localStorage.getItem("userId");
+  const gametabletype = gametableId[9];
+  // fetch casionId from local storage
+  const casinoId = localStorage.getItem("casinoid");
   // console.log("gametableId:", gametableId)
   const handleChange = (event) => {
     const { value } = event.target;
@@ -16,7 +19,25 @@ function GameTablePlay() {
       setInputValue(value);
     }
   };
-
+  const addMoney = async (amountToAdd) => {
+    console.log("Amount to add:", amountToAdd);
+    try {
+      const response = await fetch(`http://localhost:5000/wallet/addRecordBalance`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        // calculate the total wallet balance as (balance+amountToAdd)
+       
+        body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: "cash", currency:"INR",casino_id:casinoId})
+      });
+      const data = await response.json();
+      console.log(data);
+      fetchBalance();  // Re-fetch balance to update the displayed amount
+    } catch (error) {
+      console.error('Failed to add money:', error);
+    }
+  };
   const handlePlayClick = async () => {
     try {
       const response = await fetch("/play", {
@@ -61,6 +82,7 @@ function GameTablePlay() {
         </button>
         {gameResponse && (
           <div className="mt-4">
+            <p>Reward: {gameResponse}</p>
             <p>Reward: {gameResponse}</p>
           </div>
         )}

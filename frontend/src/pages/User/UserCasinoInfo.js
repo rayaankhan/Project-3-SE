@@ -33,6 +33,7 @@ function UserCasinoInfo() {
     async function fetchCasinos() {
       try {
         console.log(casinoId)
+        console.log(casinoId)
         const response = await fetch("/check_subscription", {
           method: "POST",
           headers: {
@@ -46,8 +47,10 @@ function UserCasinoInfo() {
         const data = await response.json();
         if(data.status === "subscribed"){
           setSubscribe("Unsubscribe");
+          setSubscribe("Unsubscribe");
         }
         else{
+          setSubscribe("Subscribe");
           setSubscribe("Subscribe");
         }
       } catch (error) {
@@ -114,8 +117,22 @@ function UserCasinoInfo() {
     //     }
     //   }
     // }
+  const handleGameTableClick = (clickedgametableid) => {
+    // console.log("Clicked game table:", clickedgametablename);
+    // let row_idx = 0;
+    // let column_idx = 0;
+    // for (let i = 0; i < gametablename.length; i++) {
+    //   const row = gametablename[i];
+    //   for (let j = 0; j < row.length; j++) {
+    //     if (row[j] === clickedgametablename) {
+    //       row_idx = i;
+    //       column_idx = j;
+    //     }
+    //   }
+    // }
     // console.log()
     // let clickedgametableid = gametableid[row_idx][column_idx];
+    localStorage.setItem("casinoid", casinoId);
     navigate("/play/gametable/" + clickedgametableid);
   };
 
@@ -148,15 +165,72 @@ function UserCasinoInfo() {
       if(data.status === "subscribed"){
         alert("Subscribed successfully");
         setSubscribe("Unsubscribe");
+        setSubscribe("Unsubscribe");
       }
       else{
         alert("Unsubscribed");
+        setSubscribe("Subscribe");
         setSubscribe("Subscribe");
       }
     } catch (error) {
       console.error("Error fetching casinos:", error);
     }
   };
+  // Function to add money to the wallet
+const addMoney = async (amountToAdd) => {
+  try {
+    const response = await fetch(`http://localhost:5000/wallet/addRecordBalance`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      // calculate the total wallet balance as (balance+amountToAdd)
+      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency,casino_id: casinoId})
+    });
+    const data = await response.json();
+    console.log(data);
+    fetchBalance();  // Re-fetch balance to update the displayed amount
+  } catch (error) {
+    console.error('Failed to add money:', error);
+  }
+};
+const exitCasino = async () => {
+  try {
+    const response = await fetch(`http://localhost:5000/wallet/update`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ user_id: userId, amount: 0 }) // Set balance to 0
+    });
+    const data = await response.json();
+    console.log(data);
+    fetchBalance();
+    if (data) {
+      alert("Tokens have been cashed out. Exiting casino...");
+      navigate('/casinos');
+    } else {
+      // Handle the case where cashout was not successful
+      alert("Failed to cash out tokens. Please try again.");
+    }
+      // Re-fetch balance to update the displayed amount
+    // navigate('/casinos');
+  } catch (error) {
+    console.error('Failed to exit casino:', error);
+  }
+};
+const handlePaymentMethodChange = (method) => {
+  setPaymentMethod(method);
+
+  if (method === 'card') {
+    const cardNumber = window.prompt('Please enter your card number:');
+    const password = window.prompt('Please enter your password:');
+  }
+  if (method === 'upi') {
+    const cardNumber = window.prompt('Please enter your upi phone number:');
+    const password = window.prompt('Please enter your password:');
+  }
+};
 
   return (
     <div>
