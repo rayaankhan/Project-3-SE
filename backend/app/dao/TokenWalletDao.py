@@ -4,6 +4,7 @@ class TokenWalletDao:
     def create_wallet(self, user_id):
         conn = get_db_connection()
         cursor = conn.cursor()
+
         cursor.execute("INSERT INTO user_token_wallet (userid, token_balance) VALUES (?, ?)", (user_id, 0))
         conn.commit()
         conn.close()

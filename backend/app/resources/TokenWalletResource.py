@@ -28,6 +28,7 @@ def process_payment(user_id, amount, payment_method,currency="INR"):
 @app.route('/wallet/balance', methods=['GET'])
 def get_wallet_balance():
     user_id = request.args.get('user_id')
+    print("user_id",user_id)
     token_wallet_dao = TokenWalletDao()
     balance = token_wallet_dao.get_wallet_balance(user_id)
     return jsonify(balance)
@@ -55,6 +56,7 @@ def add_balance():
     currency = request.json['currency']
     token_wallet_dao = TokenWalletDao()
     earlier_balance = token_wallet_dao.get_wallet_balance(user_id)
+    print("user_id",user_id)
     final_amt=process_payment(user_id, amount, strategy,currency)
     total = earlier_balance + int(final_amt)
     

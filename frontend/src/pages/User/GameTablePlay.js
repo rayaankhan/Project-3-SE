@@ -26,7 +26,7 @@ function GameTablePlay() {
           'Content-Type': 'application/json'
         },
         // calculate the total wallet balance as (balance+amountToAdd)
-        body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: "cash"})
+        body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: "cash", currency:"INR"})
       });
       const data = await response.json();
       console.log(data);
