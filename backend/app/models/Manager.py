@@ -1,9 +1,8 @@
+
 class Manager:
-    # casinos is a list of Casino objects by default it is an empty list
     def __init__(self, id, salary, casinos=[]):
         self.__id = id
         self.__salary = salary
-        self.__casinos = casinos
 
     # getters
     def get_id(self):
@@ -25,9 +24,8 @@ class Manager:
     def serialize(self):
         return {
             'salary': self.__salary,
-            'casinos': [casino.serialize() for casino in self.__casinos]
+            # 'casinos': [casino.serialize() for casino in self.__casinos]
         }
-
     
 
     

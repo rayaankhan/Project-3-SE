@@ -51,6 +51,7 @@ class GameTableDao:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM gametable WHERE gametableid = ?", (gametableId,))
+        cursor.execute("DELETE FROM casino_gametable WHERE gametableid = ?", (gametableId,))
         conn.commit()
         conn.close()
         return gametableId

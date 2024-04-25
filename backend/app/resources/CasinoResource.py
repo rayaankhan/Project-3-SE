@@ -4,13 +4,14 @@ from app import app
 from flask import request
 from app.models.builder.CasinoDirector import CasinoDirector
 from app.models.builder.CasinoBuilder import CasinoBuilder
-from app.models.builder.ConcreteCasinoBuilder import ConcreteCasinoBuilder
+from app.models.builder.ConcreteCasinoBuilder import ConcreteCasinoBuilder 
 from app.dao.UserDao import UserDao
 from app.dao.CasinoDao import CasinoDao
 from app.dao.GameTableDao import GameTableDao
 from app.dao.BarDao import BarDao
 from app.dao.StaffDao import StaffDao
 from app.models.builder.GameTable import GameTable
+from app.models.builder.Casino import Casino
 import json
 
 user_dao = UserDao()
@@ -21,7 +22,6 @@ staff_dao = StaffDao()
 
 @app.route('/casino/add',methods=['POST'])
 def add_casino():
-    # print("i am here boy")
     print(request.json)
     managerId = request.json['userId']
     casinoType = request.json['casinoType']
@@ -31,7 +31,6 @@ def add_casino():
     tableD = request.json['gameTableD']
     num_bar = request.json['bar']
     print("casinoType: ", casinoType)
-    # print(tableA+tableB+tableC+tableD+num_bar)
     stafflist = user_dao.get_staff_list(tableA+tableB+tableC+tableD+num_bar)
     staffid_list = [row['staffid'] for row in stafflist]
     print("length of stafflist: ", len(staffid_list))
@@ -48,10 +47,11 @@ def add_casino():
     else:
         print("Invalid casino")
         return jsonify({'id': -1})
-    casinoId = builder.getResult(managerId, casinoType)
-    if(casinoId == -1):
+    casino = builder.getResult(managerId, casinoType)
+    if(type(casino) is Casino):
+        return jsonify({'id': casino.get_casinoid(), 'status': 'Success'})
+    else:
         return jsonify({'status': 'Failed'})
-    return jsonify({'status': 'Success', 'id': casinoId})
 
 
 @app.route('/manager_casinos',methods=['POST'])
@@ -92,12 +92,9 @@ def get_manager_casinos():
 
 @app.route('/all_casinos',methods=['POST'])
 def get_all_casinos():
-    # print("i am here boy")
-    # print(request.json)
     userId = request.json['userId']
     all_casino_list = casino_dao.get_all_casinos()
     casino_list_json = [dict(row) for row in all_casino_list]
-    # print(casino_list_json)
     casinoA_list_id = []
     casinoB_list_id = []
     casinoC_list_id = []
@@ -123,7 +120,6 @@ def get_all_casinos():
             casinoD_list_name.append(casino_id['casinoname'])
     final_id_list = [casinoA_list_id, casinoB_list_id, casinoC_list_id, casinoD_list_id]
     final_name_list = [casinoA_list_name, casinoB_list_name, casinoC_list_name, casinoD_list_name]
-    # print(final_list)
     return jsonify({'status': 'Success', "casino_id_list": final_id_list, "casino_name_list": final_name_list})
 
 
@@ -181,15 +177,15 @@ def get_casino_info():
     casinoId = request.json['casinoId']
     casino_info = {}
 
-    table_info = get_casino_tables(casinoId)
+    table_info = get_casino_tables(casinoId) # fetches details of all the gametables of a casino through casinoid
     casino_info['table_id_list'] = table_info.json['table_id_list']
     casino_info['table_name_list'] = table_info.json['table_name_list']
 
-    bar_info = get_casino_bars(casinoId)
+    bar_info = get_casino_bars(casinoId) # fetches details of all the bars of a casino through casinoid
     casino_info['bar_id_list'] = bar_info.json['bar_id_list']
     casino_info['bar_name_list'] = bar_info.json['bar_name_list']
 
-    tokencounter_info = get_casino_tokencounterid(casinoId)
+    tokencounter_info = get_casino_tokencounterid(casinoId) # fetches details of all the tokencounter of a casino through casinoid
     casino_info['tokencounterid'] = tokencounter_info.json['tokencounterid'][0]['tokencounterid']
     return jsonify({'status': 'Success', 'casino_info': casino_info})
 
@@ -203,7 +199,6 @@ def get_gametable_info():
     gametable_dict['staffname'] = staff_assigned_name
     # Now, convert the dictionary into JSON
     gametable_json = json.dumps(gametable_dict)
-    # print("gametable_info: ", gametable_json)
     return jsonify({'status': 'Success', 'gametable_info': gametable_json})
 
 @app.route('/bar_info',methods=['POST'])
@@ -360,11 +355,11 @@ def notify():
     casinoId = request.json['casinoId']
     managerId = request.json['managerId']
     text = request.json['text']
-    
-    subscriber_list_sql = user_dao.get_subscribers(casinoId)
-    subscriber_list = [row['userid'] for row in subscriber_list_sql]
-    print("subscriber_list: ", subscriber_list)
-    
-    # Yatharth has to implement here
 
-    return jsonify({'status': 'Success'})
+    casino = casino_dao.get_casino(casinoId)
+    subsIds = casino.send_notification(text)
+
+    # save notification in database
+    casino_dao.add_notification(casinoId, text, subsIds)
+
+    return jsonify({'status':'Success'})

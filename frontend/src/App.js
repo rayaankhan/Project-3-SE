@@ -18,6 +18,7 @@ import BarInfo from './pages/Manager/BarInfo';
 import UserCasinoInfo from './pages/User/UserCasinoInfo';
 import GameTablePlay from './pages/User/GameTablePlay';
 import BarOrder from './pages/User/BarOrder';
+import UserNotifications from './pages/User/UserNotifications';
 import Wallet from './pages/User/Wallet';
 
 function App() {
@@ -45,7 +46,8 @@ function App() {
         <Route path="/user/:casinoId" element={<UserCasinoInfo />} />
         <Route path="/play/gametable/:gametableId" element={<GameTablePlay />} />
         <Route path="/order/bar/:barId" element={<BarOrder />} />
-        
+        <Route path="/notifications" element={<UserNotifications />} />
+
       </Routes>
     </BrowserRouter>
   );
