@@ -64,7 +64,7 @@ function UserCasinoInfo() {
   // Function to fetch balance from the backend
   const fetchBalance = async () => {
     try {
-        const response = await fetch(`http://localhost:4000/wallet/balance?user_id=${userId}`);
+        const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
         const data = await response.json();
         console.log(data);
         setTokens(data); // Adjusted assuming data.balance holds the balance
@@ -180,7 +180,7 @@ function UserCasinoInfo() {
   // Function to add money to the wallet
 const addMoney = async (amountToAdd) => {
   try {
-    const response = await fetch(`http://localhost:4000/wallet/addBalance`, {
+    const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -197,7 +197,7 @@ const addMoney = async (amountToAdd) => {
 };
 const exitCasino = async () => {
   try {
-    const response = await fetch(`http://localhost:4000/wallet/update`, {
+    const response = await fetch(`http://localhost:5000/wallet/update`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
