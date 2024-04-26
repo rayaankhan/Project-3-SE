@@ -10,6 +10,7 @@ function GameTablePlay() {
   const [gameResponse, setGameResponse] = useState("");
   const userId = localStorage.getItem("userId");
   const gametabletype = gametableId[9];
+  const casinoId = localStorage.getItem("casinoId");
   // console.log("gametableId:", gametableId)
   const handleChange = (event) => {
     const { value } = event.target;
@@ -20,18 +21,15 @@ function GameTablePlay() {
   };
   const addMoney = async (amountToAdd) => {
     try {
-      const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
-        method: "POST",
+      const response = await fetch(`http://localhost:5000/wallet/addRecordBalance`, {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem("token")}`,
+          
         },
         // calculate the total wallet balance as (balance+amountToAdd)
-        body: JSON.stringify({
-          amount: amountToAdd,
-          strategy: "cash",
-          currency: "INR",
-        }),
+        body: JSON.stringify({ userId: userId, amount: amountToAdd,strategy: "cash",currency:"INR",casinoId:casinoId})
       });
       const data = await response.json();
       console.log(data);
@@ -53,6 +51,7 @@ function GameTablePlay() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           gametableId: gametableId,

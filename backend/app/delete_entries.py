@@ -54,8 +54,6 @@ def delete_table():
 # delete_user('efcb22e7-4171-418c-9057-943ebbc7a498')
 # delete_table()
 # drop_table()
-
-
 # conn = get_db_connection()
 # cursor = conn.cursor()
 # cursor.execute("CREATE TABLE IF NOT EXISTS staff (id varchar(255) PRIMARY KEY, salary int, currentAssignedId varchar(255));")
@@ -89,7 +87,6 @@ tables = [
     "user_token_wallet",
     "user_subscription",
 ]
-
 def drop_table(tables):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -112,3 +109,10 @@ cursor = conn.cursor()
 cursor.execute("INSERT INTO users (id, username, email, age, password) VALUES ('1', 'admin', 'admin@admin.com', 20, 'admin')")
 conn.commit()
 conn.close()
+def drop_final_transaction():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DROP TABLE IF EXISTS final_transactions")
+    conn.commit()
+    conn.close()
+drop_final_transaction()

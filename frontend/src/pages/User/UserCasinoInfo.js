@@ -4,7 +4,8 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function UserCasinoInfo() {
   const { casinoId } = useParams();
-  const [currency, setCurrency] = useState("INR"); // Default currency
+  localStorage.setItem("casinoId", casinoId);
+  const [currency, setCurrency] = useState('INR'); // Default currency
   const userId = localStorage.getItem("userId");
   const [amountToAdd, setAmountToAdd] = useState("");
   const [subscribe, setSubscribe] = useState("Subscribe");
@@ -96,6 +97,7 @@ function UserCasinoInfo() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ userId: userId, casinoId: casinoId }),
         });
@@ -187,28 +189,24 @@ function UserCasinoInfo() {
     }
   };
   // Function to add money to the wallet
-  const addMoney = async (amountToAdd) => {
-    try {
-      const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        // calculate the total wallet balance as (balance+amountToAdd)
-        body: JSON.stringify({
-          amount: amountToAdd,
-          strategy: paymentMethod,
-          currency: currency,
-        }),
-      });
-      const data = await response.json();
-      console.log(data);
-      fetchBalance(); // Re-fetch balance to update the displayed amount
-    } catch (error) {
-      console.error("Failed to add money:", error);
-    }
-  };
+const addMoney = async (amountToAdd) => {
+  try {
+    const response = await fetch(`http://localhost:5000/wallet/addRecordBalance`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+      // calculate the total wallet balance as (balance+amountToAdd)
+      body: JSON.stringify({ userId: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency,casinoId:casinoId})
+    });
+    const data = await response.json();
+    console.log(data);
+    fetchBalance();  // Re-fetch balance to update the displayed amount
+  } catch (error) {
+    console.error('Failed to add money:', error);
+  }
+};
   const exitCasino = async () => {
     try {
       const response = await fetch(`http://localhost:5000/wallet/update`, {

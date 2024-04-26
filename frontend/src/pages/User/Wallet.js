@@ -24,10 +24,10 @@ function Wallet() {
             const data = await response.json();
             console.log(data);
             setBalance(data); // Adjusted assuming data.balance holds the balance
-        } catch (error) {
+        }catch (error) {
             console.error('Failed to fetch balance:', error);
-        }
-    };
+}
+};
     // function to create wallet
     const createWallet = async () => {
         try {
