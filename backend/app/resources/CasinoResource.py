@@ -234,7 +234,7 @@ class CasinoResource:
         all_object_id = gametable_id + bar_id
         print("all_object_id: ", all_object_id)
         unassign_staff_all = casino_dao.unassign_staff(all_object_id)
-        casino_dao.delete_casino_overall(casinoId)
+        casino_dao.delete_casino_overall(casinoId, gametable_id, bar_id)
         return jsonify({'status': 'Success'})
 
     @app.route('/delete_bar', methods=['POST'])

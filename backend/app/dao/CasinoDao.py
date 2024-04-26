@@ -132,7 +132,7 @@ class CasinoDao:
         conn.close()
         return
     
-    def delete_casino_overall(self, casinoId):
+    def delete_casino_overall(self, casinoId, gametableid, barid):
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM casino_token_mg WHERE casinoid = ?", (casinoId,))
@@ -140,6 +140,13 @@ class CasinoDao:
         cursor.execute("DELETE FROM casino_bar WHERE casinoid = ?", (casinoId,))
         cursor.execute("DELETE FROM casino_analytics WHERE casinoid = ?", (casinoId,))
         cursor.execute("DELETE FROM user_subscription WHERE casinoid = ?", (casinoId,))
+
+        for gametable in gametableid:
+            cursor.execute("DELETE FROM gametable WHERE gametableid = ?", (gametable,))
+
+        for bar in barid:
+            cursor.execute("DELETE FROM bar WHERE barid = ?", (bar,))           
+
         conn.commit()
         conn.close()
         return
