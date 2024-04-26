@@ -35,7 +35,7 @@ class TokenWalletResource:
         print("user_id",user_id)
         token_wallet_dao = TokenWalletDao()
         balance = token_wallet_dao.get_wallet_balance(user_id)
-        return jsonify(balance)
+        return {"balance": balance}
 
     @app.route('/wallet/create', methods=['POST'])
     @jwt_required()

@@ -1,4 +1,4 @@
-from payment_service.app.models.PaymentStrategy import PaymentStrategy
+from app.models.PaymentStrategy import PaymentStrategy
 
 class CashPayment(PaymentStrategy):
     def pay(self, amount):

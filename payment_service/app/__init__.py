@@ -15,7 +15,7 @@ CORS(app,origins='http://localhost:3000', supports_credentials=True)
 
 # Function to get a database connection
 def get_db_connection():
-    conn = sqlite3.connect("/home/yatharth-gupta/Desktop/sem6/SE/project-3/Project-3-SE/backend2/SE-Project-3.db")
+    conn = sqlite3.connect("../SE-Project-3.db")
     conn.row_factory = sqlite3.Row
     return conn
 def create_tables():
@@ -102,6 +102,6 @@ if __name__ == '__main__':
 # from app.resources.UserResource import *
 # from app.resources.ManagerResource import *
 # from app.resources.CasinoResource import *
-# from app.resources.TokenWalletResource import *
-# from payment_service.app.models.ConcreteStrategy import *
+from app.PaymentResource import *
+from app.models.ConcreteStrategy import *
 # from app.resources.GameTableResource import *

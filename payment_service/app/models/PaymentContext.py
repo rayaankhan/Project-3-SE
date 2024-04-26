@@ -1,4 +1,4 @@
-import payment_service.app.models.PaymentStrategy as PaymentStrategy
+import app.models.PaymentStrategy as PaymentStrategy
 class PaymentContext:
     def __init__(self, strategy: PaymentStrategy):
         self._strategy = strategy
