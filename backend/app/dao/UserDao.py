@@ -105,8 +105,9 @@ class UserDao:
     
     def add_notification_to_db(self, userId, message, casino_id):
         conn = get_db_connection()
+        notificationid = "notification_" + str(uuid.uuid4())
         cursor = conn.cursor()
-        cursor.execute("INSERT INTO notifications (userid, message, casinoid) VALUES (?, ?, ?)", (userId, message, casino_id))
+        cursor.execute("INSERT INTO notifications (notificationid, userid, message, casinoid) VALUES (?, ?, ?, ?)", (notificationid, userId, message, casino_id))
         conn.commit()
         conn.close()
         return userId
