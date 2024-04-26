@@ -88,7 +88,7 @@ function ManagerAnalytics() {
   useEffect(() => {
     async function fetchCasinos() {
       try {
-        const response = await fetch("/manager_casinos", {
+        const response = await fetch("/manager/casinos", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

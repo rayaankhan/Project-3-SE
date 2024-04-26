@@ -104,3 +104,4 @@ from app.resources.ManagerResource import *
 from app.resources.CasinoResource import *
 from app.resources.TokenWalletResource import *
 from app.models.builder.ConcreteStrategy import *
+from app.resources.GameTableResource import *
