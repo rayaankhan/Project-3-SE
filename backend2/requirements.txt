@@ -1,0 +1,6 @@
+Flask
+sqlite3
+flask_cors
+mysql-connector-python
+Flask-JWT-Extended
+flask-bcrypt
