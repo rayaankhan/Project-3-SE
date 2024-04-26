@@ -52,7 +52,7 @@ class TokenWalletResource:
         amount = request.json['amount']
         token_wallet_dao = TokenWalletDao()
         user_id = token_wallet_dao.update_wallet_balance(user_id, amount)
-        return jsonify(user_id)
+        return {"user_id":user_id}
 
     @app.route('/wallet/addBalance', methods=['POST'])
     @jwt_required()

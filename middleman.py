@@ -322,11 +322,20 @@ def handle_payment():
     payment_response = requests.post('http://localhost:8080/wallet/balance', headers={'Content-Type': 'application/json','Authorization': request.headers['Authorization']})
     print(payment_response.json())
     return payment_response.json(), payment_response.status_code
+@app.route('/wallet/addRecordBalance',methods=['POST'])
+def handle_addRecordBalance():
+    print("hello")
+    # user_id = request.args.get('user_id')
+    # Forward the payment request to the payment backend
+    # print(request.headers['Authorization'])
+    payment_response = requests.post('http://localhost:8080/wallet/addRecordBalance', json=request.json,headers={'Content-Type': 'application/json','Authorization': request.headers['Authorization']})
+    print(payment_response.json())
+    return payment_response.json(), payment_response.status_code
 @app.route('/wallet/update',methods=['POST'])
 def handle_wallet_update():
     print("hello")
     # Forward the payment request to the payment backend
-    payment_response = requests.post('http://localhost:8080/wallet/update', json=request.json,headers={'Content-Type': 'application/json'})
+    payment_response = requests.post('http://localhost:8080/wallet/update', json=request.json,headers={'Content-Type': 'application/json','Authorization': request.headers['Authorization']})
     print(payment_response.json())
     return payment_response.json(), payment_response.status_code
 @app.route('/wallet/addBalance',methods=['POST'])

@@ -16,7 +16,7 @@ class TokenWalletDao:
         cursor = conn.cursor()
         cursor.execute("SELECT token_balance FROM user_token_wallet WHERE userid=?", (user_id,))
         result = cursor.fetchone()
-        print("RESULTZZZZ",result[0])
+        print("RESULTZZZZ",result)
         conn.close()
         return result[0]
     def update_transaction(self, user_id, casino_id, amount, transaction_type):
