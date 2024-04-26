@@ -75,8 +75,8 @@ function UserCasinoInfo() {
       });
 
       const data = await response.json();
-      console.log(data);
-      setTokens(data); // Adjusted assuming data.balance holds the balance
+      console.log(data.balance);
+      setTokens(data.balance); // Adjusted assuming data.balance holds the balance
     } catch (error) {
       console.error("Failed to fetch balance:", error);
     }
@@ -218,7 +218,7 @@ const addMoney = async (amountToAdd) => {
         body: JSON.stringify({ user_id: userId, amount: 0 }), // Set balance to 0
       });
       const data = await response.json();
-      console.log(data);
+      console.log(data.user_id);
       fetchBalance();
       if (data) {
         alert("Tokens have been cashed out. Exiting casino...");

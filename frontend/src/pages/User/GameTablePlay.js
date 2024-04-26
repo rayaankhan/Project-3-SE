@@ -84,8 +84,8 @@ function GameTablePlay() {
         },
       });
       const data = await response.json();
-      console.log(data);
-      setBalance(data); // Adjusted assuming data.balance holds the balance
+      console.log(data.balance);
+      setBalance(data.balance); // Adjusted assuming data.balance holds the balance
     } catch (error) {
       console.error("Failed to fetch balance:", error);
     }

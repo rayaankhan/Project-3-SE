@@ -60,7 +60,7 @@ function Wallet() {
                 // body: JSON.stringify({ user_id: userId, amount:  })
             });
             const data = await response.json();
-            console.log(data);
+            console.log(data.user_id);
             fetchBalance();  // Re-fetch balance to update the displayed amount
         } catch (error) {
             console.error('Failed to add money:', error);
