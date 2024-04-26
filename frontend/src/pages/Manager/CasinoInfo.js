@@ -114,11 +114,12 @@ function CasinoInfo() {
     navigate("/gametable/" + clickedgametableid);
   };
 
-  const handleBarClick = (barname) => {
+  const handleBarClick = (barnames) => {
+    console.log(barnames)
     // Add logic for handling cell click here
     let idx = 0;
     for (let i = 0; i < barname.length; i++) {
-      if (barname[i] === barname) {
+      if (barname[i] === barnames) {
         idx = i;
       }
     }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 function BarInfo() {
   const { barId } = useParams();
@@ -12,6 +12,7 @@ function BarInfo() {
   const managerId = localStorage.getItem("userId");
   const [barName, setBarName] = useState("");
   const [staffname, setStaffName] = useState("");
+  const navigate = useNavigate()
 
   useEffect(() => {
     async function fetchAvailStaff() {
@@ -121,6 +122,7 @@ function BarInfo() {
       if (!response.ok) {
         throw new Error("Failed to delete bar");
       }
+      alert("Bar has been deleted")
       console.log("deleted");
     } catch (error) {
       console.error("Error handling the button", error);

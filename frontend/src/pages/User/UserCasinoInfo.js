@@ -252,14 +252,16 @@ const addMoney = async (amountToAdd) => {
       <div>
         <div>
           <button
+          type="button"
+          className="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => handleCurrencyChange("INR")}
-            className={currency === "INR" ? "highlighted" : ""}
           >
             INR
           </button>
           <button
+          type="button"
+          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             onClick={() => handleCurrencyChange("USD")}
-            className={currency === "USD" ? "highlighted" : ""}
           >
             USD
           </button>
@@ -273,6 +275,7 @@ const addMoney = async (amountToAdd) => {
         <label>
           Cash
           <input
+          className="mr-2"
             type="radio"
             name="paymentMethod"
             value="cash"
@@ -283,6 +286,7 @@ const addMoney = async (amountToAdd) => {
         <label>
           Card
           <input
+          className="mr-2"
             type="radio"
             name="paymentMethod"
             value="card"
@@ -293,6 +297,7 @@ const addMoney = async (amountToAdd) => {
         <label>
           UPI
           <input
+          className="mr-2"
             type="radio"
             name="paymentMethod"
             value="upi"
@@ -300,10 +305,14 @@ const addMoney = async (amountToAdd) => {
             onChange={() => handlePaymentMethodChange("upi")}
           />
         </label>
-        <button onClick={() => addMoney(amountToAdd)}>Purchase tokens</button>
+        <button
+        type="button"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={() => addMoney(amountToAdd)}>Purchase tokens</button>
       </div>
       <h2>Your current token balance: {tokens}</h2>
-      <button onClick={exitCasino}>Exit Casino</button>
+      <button
+      type="button"
+      className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" onClick={exitCasino}>Exit Casino</button>
       <h1 className="text-3xl font-bold underline">
         See all the gametbles and bar and subscribe
       </h1>

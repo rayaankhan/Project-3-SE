@@ -180,7 +180,10 @@ function RegisterForm() {
           type="number"
           placeholder="Age"
           value={age}
-          onChange={(e) => setAge(e.target.value)}
+          onChange={(e) => {
+            const newAge = Math.max(21, parseInt(e.target.value));
+            setAge(newAge);
+        }}
           className="w-full p-3 border border-gray-300 rounded-md"
         />
         <button
