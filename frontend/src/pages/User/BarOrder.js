@@ -29,10 +29,11 @@ function BarOrder() {
       const response = await fetch(`http://localhost:5000/bar/pay`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('token')}`
         },
         // calculate the total wallet balance as (balance+amountToAdd)
-        body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod,cardNumber:cardNumber,password:password})
+        body: JSON.stringify({ amount: amountToAdd,strategy: paymentMethod,cardNumber:cardNumber,password:password})
       });
       // print the parameters sent in the request
       console.log("user_id:",userId);

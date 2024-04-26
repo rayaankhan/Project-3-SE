@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar";
 import { useParams } from "react-router-dom";
 
@@ -9,7 +9,7 @@ function GameTablePlay() {
   const { gametableId } = useParams();
   const [gameResponse, setGameResponse] = useState("");
   const userId = localStorage.getItem("userId");
-  const gametabletype = gametableId[9]
+  const gametabletype = gametableId[9];
   // console.log("gametableId:", gametableId)
   const handleChange = (event) => {
     const { value } = event.target;
@@ -21,24 +21,31 @@ function GameTablePlay() {
   const addMoney = async (amountToAdd) => {
     try {
       const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         // calculate the total wallet balance as (balance+amountToAdd)
-        body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: "cash"})
+        body: JSON.stringify({
+          amount: amountToAdd,
+          strategy: "cash",
+          currency: "INR",
+        }),
       });
       const data = await response.json();
       console.log(data);
-      fetchBalance();  // Re-fetch balance to update the displayed amount
+      fetchBalance(); // Re-fetch balance to update the displayed amount
     } catch (error) {
-      console.error('Failed to add money:', error);
+      console.error("Failed to add money:", error);
     }
   };
   const handlePlayClick = async () => {
     fetchBalance();
     if (balance < inputValue) {
-      window.alert('Your balance is less than the input value. Please add more money to your account.');
+      window.alert(
+        "Your balance is less than the input value. Please add more money to your account."
+      );
       return;
     }
     try {
@@ -58,33 +65,36 @@ function GameTablePlay() {
       const data = await response.json();
       setGameResponse(data.final_amount); // Set the final amount from the response
       console.log("Data received:", data); // Log the received data
-  
+
       // Calculate and handle loss here
       const lossAmount = inputValue - data.final_amount; // Ensure no negative loss
       console.log("Loss amount:", lossAmount);
-      
+
       await addMoney(-lossAmount); // Call addMoney with the calculated lossAmount
-      
-  
     } catch (error) {
       console.error("Error playing game table:", error);
     }
   };
   const fetchBalance = async () => {
     try {
-        const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
-        const data = await response.json();
-        console.log(data);
-        setBalance(data); // Adjusted assuming data.balance holds the balance
+      const response = await fetch(`http://localhost:5000/wallet/balance`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      setBalance(data); // Adjusted assuming data.balance holds the balance
     } catch (error) {
-        console.error('Failed to fetch balance:', error);
+      console.error("Failed to fetch balance:", error);
     }
   };
   // useEffect hook to call fetchBalance when the component mounts
-    useEffect(() => {
-        fetchBalance();
-    }, []); // The empty array ensures this effect runs only once after the initial render
-
+  useEffect(() => {
+    fetchBalance();
+  }, []); // The empty array ensures this effect runs only once after the initial render
 
   return (
     <div>

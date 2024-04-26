@@ -131,6 +131,7 @@ class CasinoDao:
         cursor.execute("SELECT casinoid, casinoname FROM casino_token_mg")
         result = cursor.fetchall()
         conn.close()
+        # print("result: ", result)
         return result
     
     def get_casino_id_by_gametableid(self, gametableId):

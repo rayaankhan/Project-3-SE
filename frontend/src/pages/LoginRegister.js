@@ -139,15 +139,14 @@ function RegisterForm() {
         const errorData = await response.json();
         console.error('Registration failed:', errorData);
         alert(errorData.error);
-        navigate("/");
       } else {
         // Registration successful
         console.log('User registered successfully!');
         // navigate to the home page
         // set currentTab in local storage or state management
         localStorage.setItem("currentTab", "home");
-        navigate("/home");
       }
+      navigate("/");
     } catch (error) {
       console.error('Registration error:', error);
     }

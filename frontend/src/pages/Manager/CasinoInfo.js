@@ -237,9 +237,10 @@ function CasinoInfo() {
       const data = await response.json();
       console.log(data);
       // Handle successful response if needed
-      console.log("Notified successfully");
+      alert("Notification sent successfully")
     } catch (error) {
       console.error("Error notifying:", error);
+      alert("Failed to send notification")
     }
   };
 

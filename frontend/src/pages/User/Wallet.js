@@ -13,7 +13,14 @@ function Wallet() {
     // Function to fetch balance from the backend
     const fetchBalance = async () => {
         try {
-            const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
+            const response = await fetch(`http://localhost:5000/wallet/balance`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
+            });
+
             const data = await response.json();
             console.log(data);
             setBalance(data); // Adjusted assuming data.balance holds the balance
@@ -27,9 +34,9 @@ function Wallet() {
             const response = await fetch(`http://localhost:5000/wallet/create`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
-                body: JSON.stringify({ user_id: userId })
             });
             const data = await response.json();
             console.log(data);
@@ -45,10 +52,11 @@ function Wallet() {
             const response = await fetch(`http://localhost:5000/wallet/update`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
                 // calculate the total wallet balance as (balance+amountToAdd)
-                body: JSON.stringify({ user_id: userId, amount: parseInt(balance) + parseInt(amountToAdd) })
+                body: JSON.stringify({ amount: parseInt(balance) + parseInt(amountToAdd) })
                 // body: JSON.stringify({ user_id: userId, amount:  })
             });
             const data = await response.json();

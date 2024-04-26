@@ -63,6 +63,9 @@ def create_tables():
 
     cursor.execute("CREATE TABLE IF NOT EXISTS notifications (notificationid varchar(255) PRIMARY KEY, userid varchar(255), casinoid varchar(255), message varchar(255), FOREIGN KEY (userid) REFERENCES users(id) ON DELETE CASCADE, FOREIGN KEY (casinoid) REFERENCES casino_token_mg(casinoid) ON DELETE CASCADE)")
     conn.commit()
+
+    cursor.execute("CREATE TABLE IF NOT EXISTS manager_salary (id varchar(255) PRIMARY KEY, salary int, FOREIGN KEY (id) REFERENCES users(id) ON DELETE CASCADE)")
+    conn.commit()
     
     conn.close()
 
@@ -71,7 +74,7 @@ create_tables()
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,port=6000)
 
 # db = sqlite3.connect(DB_PATH)
 

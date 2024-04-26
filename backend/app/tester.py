@@ -5,7 +5,7 @@ import random
 
 # Function to get a database connection
 def get_db_connection():
-    conn = sqlite3.connect(r"C:\Users\lenovo\Downloads\Sem 6\SE\Project\3\Project-3-SE\backend\SE-Project-3.db")
+    conn = sqlite3.connect("/home/yatharth-gupta/Desktop/sem6/SE/project-3/Project-3-SE/backend/SE-Project-3.db")
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -106,7 +106,9 @@ def drop_table(tables):
 # addStaff(2000)
 conn = get_db_connection()
 cursor = conn.cursor()
-cursor.execute(f"DELETE FROM casino_analytics")
-cursor.execute("DELETE FROM user_subscription")
+# cursor.execute(f"DELETE FROM casino_analytics")
+# cursor.execute("DELETE FROM user_subscription")
+# add admin
+cursor.execute("INSERT INTO users (id, username, email, age, password) VALUES ('1', 'admin', 'admin@admin.com', 20, 'admin')")
 conn.commit()
 conn.close()

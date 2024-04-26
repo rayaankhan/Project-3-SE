@@ -1,5 +1,6 @@
 from flask import jsonify
 from app import app
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask import request
 
 from app.dao.TokenWalletDao import TokenWalletDao
@@ -25,50 +26,59 @@ def process_payment(user_id, amount, payment_method,currency="INR"):
     final_amt=payment_context.pay(amount)
     return final_amt
 
-@app.route('/wallet/balance', methods=['GET'])
-def get_wallet_balance():
-    user_id = request.args.get('user_id')
-    token_wallet_dao = TokenWalletDao()
-    balance = token_wallet_dao.get_wallet_balance(user_id)
-    return jsonify(balance)
 
-@app.route('/wallet/create', methods=['POST'])
-def create_wallet():
-    user_id = request.json['user_id']
-    token_wallet_dao = TokenWalletDao()
-    user_id = token_wallet_dao.create_wallet(user_id)
-    return jsonify(user_id)
+class TokenWalletResource:
+    @app.route('/wallet/balance', methods=['POST'])
+    @jwt_required()
+    def get_wallet_balance():
+        user_id = get_jwt_identity()
+        print("user_id",user_id)
+        token_wallet_dao = TokenWalletDao()
+        balance = token_wallet_dao.get_wallet_balance(user_id)
+        return jsonify(balance)
 
-@app.route('/wallet/update', methods=['POST'])
-def update_wallet_balance():
-    user_id = request.json['user_id']
-    amount = request.json['amount']
-    token_wallet_dao = TokenWalletDao()
-    user_id = token_wallet_dao.update_wallet_balance(user_id, amount)
-    return jsonify(user_id)
+    @app.route('/wallet/create', methods=['POST'])
+    @jwt_required()
+    def create_wallet():
+        user_id = get_jwt_identity()
+        token_wallet_dao = TokenWalletDao()
+        user_id = token_wallet_dao.create_wallet(user_id)
+        return jsonify(user_id)
 
-@app.route('/wallet/addBalance', methods=['POST'])
-def add_balance():
-    user_id = request.json['user_id']
-    amount = request.json['amount']
-    strategy = request.json['strategy'] 
-    currency = request.json['currency']
-    token_wallet_dao = TokenWalletDao()
-    earlier_balance = token_wallet_dao.get_wallet_balance(user_id)
-    final_amt=process_payment(user_id, amount, strategy,currency)
-    total = earlier_balance + int(final_amt)
-    
-    token_wallet_dao.update_wallet_balance(user_id, total)
-    return jsonify({"status": "success"})
+    @app.route('/wallet/update', methods=['POST'])
+    @jwt_required()
+    def update_wallet_balance():
+        user_id = get_jwt_identity()
+        amount = request.json['amount']
+        token_wallet_dao = TokenWalletDao()
+        user_id = token_wallet_dao.update_wallet_balance(user_id, amount)
+        return jsonify(user_id)
 
-@app.route('/bar/pay', methods=['POST'])
-def pay_bar():
-    user_id = request.json['user_id']
-    amount = request.json['amount']
-    strategy = request.json['strategy'] 
-    token_wallet_dao = TokenWalletDao()
-    # earlier_balance = token_wallet_dao.get_wallet_balance(user_id)
-    # total = earlier_balance + int(amount)
-    process_payment(user_id, amount, strategy)
-    # token_wallet_dao.update_wallet_balance(user_id, total)
-    return jsonify({"status": "success"})
+    @app.route('/wallet/addBalance', methods=['POST'])
+    @jwt_required()
+    def add_balance():
+        user_id = get_jwt_identity()
+        amount = request.json['amount']
+        strategy = request.json['strategy'] 
+        currency = request.json['currency']
+        token_wallet_dao = TokenWalletDao()
+        earlier_balance = token_wallet_dao.get_wallet_balance(user_id)
+        print("user_id",user_id)
+        final_amt=process_payment(user_id, amount, strategy,currency)
+        total = earlier_balance + int(final_amt)
+        
+        token_wallet_dao.update_wallet_balance(user_id, total)
+        return jsonify({"status": "success"})
+
+    @app.route('/bar/pay', methods=['POST'])
+    @jwt_required()
+    def pay_bar():
+        user_id = get_jwt_identity()
+        amount = request.json['amount']
+        strategy = request.json['strategy'] 
+        token_wallet_dao = TokenWalletDao()
+        # earlier_balance = token_wallet_dao.get_wallet_balance(user_id)
+        # total = earlier_balance + int(amount)
+        process_payment(user_id, amount, strategy)
+        # token_wallet_dao.update_wallet_balance(user_id, total)
+        return jsonify({"status": "success"})

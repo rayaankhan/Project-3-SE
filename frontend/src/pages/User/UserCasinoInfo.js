@@ -4,12 +4,12 @@ import { useParams, useNavigate } from "react-router-dom";
 
 function UserCasinoInfo() {
   const { casinoId } = useParams();
-  const [currency, setCurrency] = useState('INR'); // Default currency
+  const [currency, setCurrency] = useState("INR"); // Default currency
   const userId = localStorage.getItem("userId");
-  const [amountToAdd, setAmountToAdd] = useState('');
+  const [amountToAdd, setAmountToAdd] = useState("");
   const [subscribe, setSubscribe] = useState("Subscribe");
   const [tokens, setTokens] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState('cash'); // default payment method
+  const [paymentMethod, setPaymentMethod] = useState("cash"); // default payment method
   const [gametableid, setGametableid] = useState([
     [], // gametableA_list
     [], // gametableB_list
@@ -36,11 +36,12 @@ function UserCasinoInfo() {
   useEffect(() => {
     async function fetchCasinos() {
       try {
-        console.log(casinoId)
+        console.log(casinoId);
         const response = await fetch("/check_subscription", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify({ userId: userId, casinoId: casinoId }),
         });
@@ -48,10 +49,9 @@ function UserCasinoInfo() {
           throw new Error("Failed to fetch casinos");
         }
         const data = await response.json();
-        if(data.status === "subscribed"){
+        if (data.status === "subscribed") {
           setSubscribe("Unsubscribe");
-        }
-        else{
+        } else {
           setSubscribe("Subscribe");
         }
       } catch (error) {
@@ -65,18 +65,25 @@ function UserCasinoInfo() {
   // Function to fetch balance from the backend
   const fetchBalance = async () => {
     try {
-        const response = await fetch(`http://localhost:5000/wallet/balance?user_id=${userId}`);
-        const data = await response.json();
-        console.log(data);
-        setTokens(data); // Adjusted assuming data.balance holds the balance
+      const response = await fetch(`http://localhost:5000/wallet/balance`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+
+      const data = await response.json();
+      console.log(data);
+      setTokens(data); // Adjusted assuming data.balance holds the balance
     } catch (error) {
-        console.error('Failed to fetch balance:', error);
+      console.error("Failed to fetch balance:", error);
     }
-};
+  };
   // useEffect hook to call fetchBalance when the component mounts
   useEffect(() => {
     fetchBalance();
-}, []); // The empty array ensures this effect runs only once after the initial render
+  }, []); // The empty array ensures this effect runs only once after the initial render
   const handleCurrencyChange = (selectedCurrency) => {
     console.log("Currency changed to:", selectedCurrency);
     setCurrency(selectedCurrency);
@@ -160,6 +167,7 @@ function UserCasinoInfo() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ userId: userId, casinoId: casinoId }),
       });
@@ -167,11 +175,10 @@ function UserCasinoInfo() {
         throw new Error("Failed to fetch casinos");
       }
       const data = await response.json();
-      if(data.status === "subscribed"){
+      if (data.status === "subscribed") {
         alert("Subscribed successfully");
         setSubscribe("Unsubscribe");
-      }
-      else{
+      } else {
         alert("Unsubscribed");
         setSubscribe("Subscribe");
       }
@@ -180,60 +187,66 @@ function UserCasinoInfo() {
     }
   };
   // Function to add money to the wallet
-const addMoney = async (amountToAdd) => {
-  try {
-    const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      // calculate the total wallet balance as (balance+amountToAdd)
-      body: JSON.stringify({ user_id: userId, amount: amountToAdd,strategy: paymentMethod,currency: currency})
-    });
-    const data = await response.json();
-    console.log(data);
-    fetchBalance();  // Re-fetch balance to update the displayed amount
-  } catch (error) {
-    console.error('Failed to add money:', error);
-  }
-};
-const exitCasino = async () => {
-  try {
-    const response = await fetch(`http://localhost:5000/wallet/update`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ user_id: userId, amount: 0 }) // Set balance to 0
-    });
-    const data = await response.json();
-    console.log(data);
-    fetchBalance();
-    if (data) {
-      alert("Tokens have been cashed out. Exiting casino...");
-      navigate('/casinos');
-    } else {
-      // Handle the case where cashout was not successful
-      alert("Failed to cash out tokens. Please try again.");
+  const addMoney = async (amountToAdd) => {
+    try {
+      const response = await fetch(`http://localhost:5000/wallet/addBalance`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        // calculate the total wallet balance as (balance+amountToAdd)
+        body: JSON.stringify({
+          amount: amountToAdd,
+          strategy: paymentMethod,
+          currency: currency,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      fetchBalance(); // Re-fetch balance to update the displayed amount
+    } catch (error) {
+      console.error("Failed to add money:", error);
     }
+  };
+  const exitCasino = async () => {
+    try {
+      const response = await fetch(`http://localhost:5000/wallet/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ user_id: userId, amount: 0 }), // Set balance to 0
+      });
+      const data = await response.json();
+      console.log(data);
+      fetchBalance();
+      if (data) {
+        alert("Tokens have been cashed out. Exiting casino...");
+        navigate("/casinos");
+      } else {
+        // Handle the case where cashout was not successful
+        alert("Failed to cash out tokens. Please try again.");
+      }
       // Re-fetch balance to update the displayed amount
-    // navigate('/casinos');
-  } catch (error) {
-    console.error('Failed to exit casino:', error);
-  }
-};
-const handlePaymentMethodChange = (method) => {
-  setPaymentMethod(method);
+      // navigate('/casinos');
+    } catch (error) {
+      console.error("Failed to exit casino:", error);
+    }
+  };
+  const handlePaymentMethodChange = (method) => {
+    setPaymentMethod(method);
 
-  if (method === 'card') {
-    const cardNumber = window.prompt('Please enter your card number:');
-    const password = window.prompt('Please enter your password:');
-  }
-  if (method === 'upi') {
-    const cardNumber = window.prompt('Please enter your upi phone number:');
-    const password = window.prompt('Please enter your password:');
-  }
-};
+    if (method === "card") {
+      const cardNumber = window.prompt("Please enter your card number:");
+      const password = window.prompt("Please enter your password:");
+    }
+    if (method === "upi") {
+      const cardNumber = window.prompt("Please enter your upi phone number:");
+      const password = window.prompt("Please enter your password:");
+    }
+  };
 
   return (
     <div>
@@ -241,41 +254,53 @@ const handlePaymentMethodChange = (method) => {
       <div>
         <div>
           <button
-            onClick={() => handleCurrencyChange('INR')}
-            className={currency === 'INR' ? 'highlighted' : ''}
+            onClick={() => handleCurrencyChange("INR")}
+            className={currency === "INR" ? "highlighted" : ""}
           >
             INR
           </button>
           <button
-            onClick={() => handleCurrencyChange('USD')}
-            className={currency === 'USD' ? 'highlighted' : ''}
+            onClick={() => handleCurrencyChange("USD")}
+            className={currency === "USD" ? "highlighted" : ""}
           >
             USD
           </button>
         </div>
         <input
-                      type="number"
-                      value={amountToAdd}
-                      onChange={e => setAmountToAdd(e.target.value)}
-                      placeholder="Amount to add"
-                  />
+          type="number"
+          value={amountToAdd}
+          onChange={(e) => setAmountToAdd(e.target.value)}
+          placeholder="Amount to add"
+        />
         <label>
           Cash
-          <input type="radio" name="paymentMethod" value="cash"
-            checked={paymentMethod === 'cash'}
-            onChange={() => setPaymentMethod('cash')} />
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="cash"
+            checked={paymentMethod === "cash"}
+            onChange={() => setPaymentMethod("cash")}
+          />
         </label>
         <label>
           Card
-          <input type="radio" name="paymentMethod" value="card"
-            checked={paymentMethod === 'card'}
-            onChange={() => handlePaymentMethodChange('card')} />
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="card"
+            checked={paymentMethod === "card"}
+            onChange={() => handlePaymentMethodChange("card")}
+          />
         </label>
         <label>
           UPI
-          <input type="radio" name="paymentMethod" value="upi"
-            checked={paymentMethod === 'upi'}
-            onChange={() => handlePaymentMethodChange('upi')} />
+          <input
+            type="radio"
+            name="paymentMethod"
+            value="upi"
+            checked={paymentMethod === "upi"}
+            onChange={() => handlePaymentMethodChange("upi")}
+          />
         </label>
         <button onClick={() => addMoney(amountToAdd)}>Purchase tokens</button>
       </div>
