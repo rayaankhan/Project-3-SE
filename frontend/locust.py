@@ -85,7 +85,7 @@ class LoadTestingUser(SequentialTaskSet):
         gametable_id = random.choice(self.gametable_id_list)
         headers = {"content-type": "application/json", "Authorization": "Bearer " + self.access_token}
         amt = random.randint(100, 1000)
-        response = self.client.post("/wallet/addBalance", json=({ "amount": amt, "strategy": "cash", "currency":"INR"}), headers=headers)
+        response = self.client.post("/wallet/addRecordBalance", json=({ "amount": amt, "strategy": "cash", "currency":"INR"}), headers=headers)
         # if response.status_code == 200:
             # print("Payment successful")
         # else:
