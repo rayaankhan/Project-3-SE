@@ -66,6 +66,13 @@ class CasinoDao:
         result = cursor.fetchone()
         conn.close()
         return result[0]
+    def get_casino_name_from_id(self,casinoid):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT casinoname FROM casino_token_mg WHERE casinoid = ?", (casinoid,))
+        result = cursor.fetchone()
+        conn.close()
+        return result[0]
     def get_table_date_amount(self,casinoId):
         conn = get_db_connection()
         cursor = conn.cursor()

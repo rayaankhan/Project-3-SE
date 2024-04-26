@@ -12,7 +12,9 @@ function UserAnalytics() {
   const [casinoInfo, setCasinoInfo] = useState([]);
   const [casinoData, setCasinoData] = useState([]);
   let userId = localStorage.getItem('userId');
+  
   useEffect(() => {
+    
     async function fetchCasinos() {
       console.log("HOI!!!!")
       try {
@@ -28,7 +30,7 @@ function UserAnalytics() {
           throw new Error("Failed to fetch casinos");
         }
         const data = await response.json();
-        console.log("Casinos of User data:", data);
+        // console.log("Casinos of User data:", data);
         // const modifiedCasinoInfo = data
         const modifiedCasinoInfo = data.final_list.map((casinoInfo) => {
           const datetimeParts = casinoInfo.datetime.split(" ");
@@ -62,10 +64,38 @@ function UserAnalytics() {
         }));
 
         // Sort the sortedCasinoNetAmounts array based on the casinoname
-        sortedCasinoNetAmounts.sort((a, b) => a.casinoid.localeCompare(b.casinoid));
-        
-        setCasinoData(sortedCasinoNetAmounts);
-        console.log("boo:",sortedCasinoNetAmounts);
+        sortedCasinoNetAmounts.sort((a, b) => a.casinoid.localeCompare(b.casinoid));  
+        const getCasinoName = async (casinoid) => {
+          // console.log("casinoid:", casinoid)
+          try {
+            const response = await fetch("/casino_name_from_id", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+              body: JSON.stringify({ casinoid: casinoid }),
+            });
+            if (!response.ok) {
+              throw new Error("Failed to fetch casino Names");
+            }
+            const data = await response.json();
+            // console.log("data:", data)
+            return data.casino_name;
+          } catch (error) {
+            console.error("Error fetching casinos:", error);
+          }
+        };
+        // sortedCasinoNetAmounts.forEach(async(casino) => {
+          //   casino.casinoname = await getCasinoName(casino.casinoid);
+          // });
+          
+          const casinoDataWithNames = await Promise.all(sortedCasinoNetAmounts.map(async (casino) => {
+            const casinoname = await getCasinoName(casino.casinoid);
+            return { ...casino, casinoname };
+          }));
+        setCasinoData(casinoDataWithNames);        
+        // console.log("boo:",sortedCasinoNetAmounts);
         
         // Process the data received from the backend
       } catch (error) {
@@ -98,6 +128,7 @@ function UserAnalytics() {
     slidesToScroll: 1,
     adaptiveHeight: true
   };
+  console.log("casinoData:  ",casinoData)
   return (
     <div>
       <Navbar />
@@ -108,7 +139,10 @@ function UserAnalytics() {
       <div className="slider-container">
         <Slider {...sliderSettings}>
           {casinoData.map((casino) => (
+            
             <div key={casino.casinoname}>
+              {console.log("casino everything:  ",casino)}
+
               <h3>{casino.casinoname}</h3>
               <Bar
                 data={getChartData(casino.netAmounts)}
@@ -124,7 +158,7 @@ function UserAnalytics() {
                     },
                     title: {
                       display: true,
-                      text: `Net Amounts for ${casino.casinoid}`
+                      text: `Net Amounts for ${casino.casinoname}`
                     }
                   }
                 }}

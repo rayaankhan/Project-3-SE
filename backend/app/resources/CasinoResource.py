@@ -403,7 +403,13 @@ def notify():
     casino.send_notification(text)
 
     return jsonify({'status':'Success'})
-
+@app.route('/casino_name_from_id',methods=['POST'])
+def get_casino_name_from_id():
+    print("Getting casino name")
+    casinoId = request.json['casinoid']
+    print("casinoId: ", casinoId)
+    casino_name = casino_dao.get_casino_name_from_id(casinoId)
+    return jsonify({'status': 'Success', 'casino_name': casino_name})
 
 @app.route('/casino_analytics',methods=['POST'])
 def get_casino_analytics():
