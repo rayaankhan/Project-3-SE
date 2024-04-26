@@ -15,7 +15,7 @@ CORS(app,origins='http://localhost:3000', supports_credentials=True)
 
 # Function to get a database connection
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect("/home/yatharth-gupta/Desktop/sem6/SE/project-3/Project-3-SE/backend2/SE-Project-3.db")
     conn.row_factory = sqlite3.Row
     return conn
 def create_tables():
