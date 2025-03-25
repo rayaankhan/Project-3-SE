@@ -1,3 +1,4 @@
 Flask
 sqlite3
 flask_cors
+mysql-connector-python

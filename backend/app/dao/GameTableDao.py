@@ -38,6 +38,23 @@ class GameTableDao:
         conn.close()
         return result
     
+    def get_table_id_from_name(self, name):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT gametableid FROM gametable WHERE name = ?", (name,))
+        result = cursor.fetchone()
+        conn.close()
+        return result[0]
+    
+
+    def get_table_date_amount(self, gametableId):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT datetime, amount FROM casino_analytics WHERE gametableid = ?", (gametableId,))
+        result = cursor.fetchall()
+        conn.close()
+        return result
+    
     def update_gametable_staff(self, gametableId, staffid):
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -51,6 +68,7 @@ class GameTableDao:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM gametable WHERE gametableid = ?", (gametableId,))
+        cursor.execute("DELETE FROM casino_gametable WHERE gametableid = ?", (gametableId,))
         conn.commit()
         conn.close()
         return gametableId

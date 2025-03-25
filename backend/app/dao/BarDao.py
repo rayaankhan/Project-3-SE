@@ -37,6 +37,7 @@ class BarDao:
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM bar WHERE barid = ?", (barId,))
+        cursor.execute("DELETE FROM casino_bar WHERE barid = ?", (barId,))
         conn.commit()
         conn.close()
         return barId

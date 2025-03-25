@@ -21,7 +21,7 @@ function CasinoInfo() {
   else if(casinoType === "D"){
     allowedTables = ['B', 'D']
   }
-  console.log("allowedTables", allowedTables)
+  // console.log("allowedTables", allowedTables)
   const [tokencounterid, setTokencounterid] = useState("");
   const [gametableid, setGametableid] = useState([
     [], // gametableA_list

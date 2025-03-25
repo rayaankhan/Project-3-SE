@@ -42,7 +42,7 @@ function UserCasino() {
     }
 
     fetchCasinos();
-  }, [userId]); // Empty dependency array ensures the effect runs only once
+  }, [userId]);
 
   useEffect(() => {
     console.log("Updated casinos name:", casinosname[0]);
@@ -74,9 +74,6 @@ function UserCasino() {
                 <ol>
                   {casinosname
                     .reduce((acc, casinoList) => {
-                      {
-                        /* console.log("casinoList:", casinoList); */
-                      }
                       return acc.concat(
                         casinoList.filter((casino) =>
                           casino.startsWith(

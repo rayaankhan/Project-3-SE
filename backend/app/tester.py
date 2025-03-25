@@ -5,7 +5,7 @@ import random
 
 # Function to get a database connection
 def get_db_connection():
-    conn = sqlite3.connect(r"C:\Users\lenovo\Downloads\Sem 6\SE\Project\3\Project-3-SE\backend\SE-Project-3.db")
+    conn = sqlite3.connect(r"C:\Users\shivh\Downloads\Project-3-SE-yatharth\Project-3-SE-yatharth\backend\SE-Project-3.db")
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -54,8 +54,6 @@ def delete_table():
 # delete_user('efcb22e7-4171-418c-9057-943ebbc7a498')
 # delete_table()
 # drop_table()
-
-
 # conn = get_db_connection()
 # cursor = conn.cursor()
 # cursor.execute("CREATE TABLE IF NOT EXISTS staff (id varchar(255) PRIMARY KEY, salary int, currentAssignedId varchar(255));")
@@ -89,7 +87,6 @@ tables = [
     "user_token_wallet",
     "user_subscription",
 ]
-
 def drop_table(tables):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -101,12 +98,10 @@ def drop_table(tables):
     # cursor.execute("DELETE FROM staff")
     conn.commit()
     conn.close()
-
-# drop_table(tables)
-# addStaff(2000)
-conn = get_db_connection()
-cursor = conn.cursor()
-cursor.execute(f"DELETE FROM casino_analytics")
-cursor.execute("DELETE FROM user_subscription")
-conn.commit()
-conn.close()
+def drop_final_transaction():
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("DROP TABLE IF EXISTS final_transactions")
+    conn.commit()
+    conn.close()
+drop_final_transaction()
